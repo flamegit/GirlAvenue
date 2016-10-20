@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
+
+import com.flame.Adapter.BaseViewHolder;
 import com.flame.Adapter.GirlListAdapter;
 import com.flame.model.Lady;
 import com.flame.model.Response;
@@ -44,7 +46,7 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
             }
         });
         recyclerView.setHasFixedSize(true);
-        mAdapter=new GirlListAdapter<Lady>(getContext());
+        mAdapter=new GirlListAdapter<Lady>();
         recyclerView.setAdapter(mAdapter);
         mRefreshLayout.post(new Runnable() {
             @Override
@@ -61,7 +63,7 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void hideProgress() {
         mRefreshLayout.setRefreshing(false);
-        //mAdapter.hideFooter();
+        mAdapter.hideFooter();
     }
 
     @Override
@@ -72,6 +74,5 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
        // mPresenter.refresh();
-
     }
 }

@@ -30,34 +30,27 @@ import java.util.zip.Inflater;
 /**
  * Created by Administrator on 2016/10/4.
  */
-public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.ViewHolder> {
-
+public class GirlListAdapter<T> extends RecyclerView.Adapter<BaseViewHolder>{
     List<T> mResults;
-    Context mContext;
     boolean isShowFooter;
-
-
-    public GirlListAdapter(Context context){
-        mContext=context;
+    private final static int FOOTER=1;
+    private final static int HEADER=2;
+    public GirlListAdapter(){
         mResults=new ArrayList<>(10);
     }
-
     public void showFooter(){
         isShowFooter=true;
         notifyItemInserted(getItemCount());
     }
-
     public void hideFooter(){
         isShowFooter=false;
         notifyItemMoved(getItemCount()-1,getItemCount());
     }
-
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        if(viewType==1){
+        if(viewType==FOOTER){
             view= LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_view,parent,false);
-            view.findViewById(R.id.progress_bar);
         }else {
             view= LayoutInflater.from(parent.getContext()).inflate(R.layout.image_view,parent,false);
             view.setOnClickListener(new View.OnClickListener() {
@@ -66,63 +59,31 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
                 }
             });
         }
-        return new ViewHolder(view);
+       return  new BaseViewHolder.GirlViewHolder(view);
     }
-
     @Override
     public int getItemCount() {
         return isShowFooter ? mResults.size()+1:mResults.size();
     }
-
     public void addItems( List<T> items){
         Log.d("Girl",items.size()+"");
         mResults.addAll(items);
         notifyDataSetChanged();
     }
-
     @Override
     public int getItemViewType(int position) {
         if(position==getItemCount()-1 && isShowFooter){
-            return 1;
+            return FOOTER;
         }
         return 0;
     }
-
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        if(getItemViewType(position)==1){
-            Log.d("fxlts","footer");
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
+        if(getItemViewType(position)==FOOTER){
             StaggeredGridLayoutManager.LayoutParams layoutParams= (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
             layoutParams.setFullSpan(true);
             return;
         }
-        T t=mResults.get(position);
-        if(t instanceof Response.Girl){
-            Response.Girl girl=(Response.Girl)t;
-            Picasso picasso= Picasso.with(mContext);
-            picasso.setLoggingEnabled(true);
-            picasso.load(girl.url)
-                    .noFade()
-                    .into((ImageView)holder.imageView);
-        }
-        if(t instanceof Lady){
-            Lady lady=(Lady) t;
-            Picasso picasso= Picasso.with(mContext);
-            picasso.setLoggingEnabled(true);
-            picasso.load(lady.mThumbUrl)
-                    .noFade()
-                    .into((ImageView)holder.imageView);
-        }
-
+        holder.onBind(mResults.get(position));
     }
-
-     static class ViewHolder extends RecyclerView.ViewHolder{
-        public View imageView;
-        ViewHolder(View view){
-            super(view);
-            imageView=view.findViewById(R.id.image);
-      }
-    }
-
-
 }

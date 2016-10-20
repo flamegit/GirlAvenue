@@ -26,11 +26,11 @@ public class GirlAdapter extends android.support.v4.view.PagerAdapter {
 
     public GirlAdapter(){
         mResults=new ArrayList<>(10);
-       //
+
     }
 
     public void addItems( List<Response.Girl> items){
-       // if(mResults.size()>=20)
+
         Log.d("Girl",items.size()+"");
         mResults.addAll(items);
 
@@ -42,11 +42,6 @@ public class GirlAdapter extends android.support.v4.view.PagerAdapter {
     public int getCount() {
         return mResults.size();
     }
-
-//    @Override
-//    public int getItemPosition(Object object) {
-//        return POSITION_NONE;
-//    }
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
