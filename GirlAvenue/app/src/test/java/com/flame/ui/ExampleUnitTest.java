@@ -1,4 +1,4 @@
-package com.flame.girlavenue;
+package com.flame.ui;
 
 import org.junit.Test;
 

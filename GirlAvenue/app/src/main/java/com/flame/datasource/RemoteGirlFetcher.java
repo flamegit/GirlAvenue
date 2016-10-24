@@ -1,6 +1,8 @@
 package com.flame.datasource;
 
 import android.util.Log;
+
+import com.flame.model.Girl;
 import com.flame.model.Response;
 
 import java.util.List;
@@ -23,31 +25,13 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Administrator on 2016/10/3.
  */
-public class RemoteGirlFetcher {
-    private  static RemoteGirlFetcher mInstance;
-    private  Retrofit mRetrofit;
-    private int mPage;
-
-    public static RemoteGirlFetcher getInstance(){
-        if(mInstance==null) {
-            synchronized (RemoteGirlFetcher.class){
-                if(mInstance==null){
-                    mInstance=new RemoteGirlFetcher();
-                }
-            }
-        }
-        return mInstance;
-    }
+public class RemoteGirlFetcher extends Fetcher{
 
     interface NetApi {
         @GET("data/福利/10/{page}")
         Observable<Response> getGirlList(@Path("page")int page);
     }
-    public interface CallBack{
-        void onLoad(List<Response.Girl> results);
-        void onError();
-    }
-
+    private  Retrofit mRetrofit;
     private RemoteGirlFetcher(){
        mRetrofit= new  Retrofit.Builder().baseUrl("http://gank.io/api/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -56,28 +40,24 @@ public class RemoteGirlFetcher {
         mPage=1;
     }
 
-    public int getNextPage(CallBack callBack){
-        mPage++;
-        getGirlList(callBack);
-        return mPage;
+    public static RemoteGirlFetcher getInstance(){
+        return new RemoteGirlFetcher();
     }
 
-    public void getGirlList(final CallBack callBack){
+    public void loadData(final Fetcher.Callback callBack){
       mRetrofit.create(NetApi.class).getGirlList(mPage)
-              .map(new Func1<Response, List<Response.Girl>>() {
+              .map(new Func1<Response, List<Girl>>() {
                   @Override
-                  public List<Response.Girl> call(Response response) {
-
+                  public List<Girl> call(Response response) {
                      return response.getResults();
                   }
               })
               .delay(30, TimeUnit.SECONDS)
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(new Observer<List<Response.Girl>>() {
+              .subscribe(new Observer<List<Girl>>() {
                   @Override
                   public void onCompleted() {
-
                   }
                   @Override
                   public void onError(Throwable e) {
@@ -85,7 +65,7 @@ public class RemoteGirlFetcher {
                       callBack.onError();
                   }
                   @Override
-                  public void onNext(List<Response.Girl> results) {
+                  public void onNext(List<Girl> results) {
                        callBack.onLoad(results);
                   }
               });

@@ -1,6 +1,4 @@
-package com.flame.Presenter;
-
-import com.flame.model.Response;
+package com.flame.presenter;
 
 import java.util.List;
 
@@ -19,6 +17,6 @@ public interface GirlContract {
     interface Presenter{
         void getGirlList();
         void start();
-        void refresh();
+        void getNext();
     }
 }

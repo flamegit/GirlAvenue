@@ -1,15 +1,13 @@
-package com.flame.girlavenue;
+package com.flame.ui;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flame.Presenter.GirlContract;
-import com.squareup.picasso.Picasso;
+import com.flame.presenter.GirlContract;
 
 /**
  * Created by Administrator on 2016/10/8.

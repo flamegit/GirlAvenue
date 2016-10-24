@@ -1,35 +1,22 @@
-package com.flame.Presenter;
-
-import android.support.design.widget.Snackbar;
-
-import com.flame.datasource.HtmlParse;
-import com.flame.datasource.RemoteGirlFetcher;
-import com.flame.model.Lady;
-import com.flame.model.Response;
-
+package com.flame.presenter;
+import com.flame.datasource.Fetcher;
 import java.util.List;
-
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2016/10/9.
  */
 
-public class GirlPresenter implements GirlContract.Presenter,RemoteGirlFetcher.CallBack {
-
+public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
     GirlContract.View mView;
-    boolean isLoading;
-    public GirlPresenter(GirlContract.View view){
+    volatile boolean isLoading;
+    Fetcher mFetcher;
+    public GirlPresenter(GirlContract.View view,Fetcher fetcher){
         mView=view;
         mView.setPresenter(this);
     }
 
     @Override
-    public void onLoad(List<Response.Girl> results) {
+    public void onLoad(List results) {
         mView.fillView(results);
         mView.hideProgress();
         isLoading=false;
@@ -46,51 +33,22 @@ public class GirlPresenter implements GirlContract.Presenter,RemoteGirlFetcher.C
         if(isLoading){
             return;
         }
+        mView.showProgress();
         isLoading=true;
-        RemoteGirlFetcher.getInstance().getGirlList(this);
-    }
-
-    public void getLadyList(){
-        Observable.create(new Observable.OnSubscribe<List<Lady>>() {
-            @Override
-            public void call(Subscriber<? super List<Lady>> subscriber) {
-                List<Lady> ladys=HtmlParse.getHtmlContent("http://www.mzitu.com/");
-                subscriber.onNext(ladys);
-                subscriber.onCompleted();
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Lady>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                    @Override
-                    public void onNext(List<Lady> ladies) {
-                        mView.fillView(ladies);
-                    }
-                });
+        mFetcher.loadData(this);
     }
 
     @Override
-    public void refresh(){
+    public void getNext(){
         if(isLoading){
             return;
         }
-        mView.showProgress();
         isLoading=true;
-        int page= RemoteGirlFetcher.getInstance().getNextPage(this);
-
+        mFetcher.loadNextPage(this);
     }
 
     @Override
     public void start() {
-       // getGirlList();
-        getLadyList();
+        getGirlList();
     }
 }
