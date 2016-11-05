@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.flame.model.Girl;
 import com.flame.ui.R;
@@ -43,11 +44,6 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
         isShowFooter=false;
         notifyItemMoved(getItemCount()-1,getItemCount());
     }
-
-    public void setItemListener(){
-
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
@@ -56,6 +52,7 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
         }else {
             view= LayoutInflater.from(parent.getContext()).inflate(R.layout.image_view,parent,false);
         }
+
         return new ViewHolder(view);
     }
 
@@ -84,15 +81,17 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
             layoutParams.setFullSpan(true);
             return;
         }
-        String url=null;
+        String url=null,desc=null;
         final T t=mResults.get(position);
         if(t instanceof Girl){
             Girl girl=(Girl)t;
             url=girl.url;
+            desc=girl.desc;
         }
         if(t instanceof Lady){
             Lady lady=(Lady) t;
             url=lady.mThumbUrl;
+            desc=lady.mDes;
         }
 
         Picasso picasso= Picasso.with(mContext);
@@ -100,6 +99,7 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
         picasso.load(url)
                 .noFade()
                 .into((ImageView)holder.imageView);
+        holder.textView.setText(desc);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,10 +109,12 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
     }
 
      static class ViewHolder extends RecyclerView.ViewHolder{
-        public View imageView;
+         public View imageView;
+         public TextView textView;
         ViewHolder(View view){
             super(view);
             imageView=view.findViewById(R.id.image);
+            textView=(TextView)view.findViewById(R.id.des_view);
       }
     }
 }

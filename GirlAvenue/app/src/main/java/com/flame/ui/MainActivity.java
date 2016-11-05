@@ -1,11 +1,15 @@
 package com.flame.ui;
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.flame.datasource.Fetcher;
+import com.flame.datasource.RemoteLadylFetcher;
 import com.flame.model.Lady;
 import com.flame.presenter.GirlPresenter;
 import com.flame.utils.NetWorkUtils;
@@ -15,6 +19,7 @@ import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
+    Fetcher mfetcher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +35,14 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content,fragment)
                     .commit();
         }
-        new GirlPresenter(fragment,null);
+        mfetcher=new RemoteLadylFetcher();
+        new GirlPresenter(fragment,mfetcher);
 
         RxBus.getDefault().toObservable(Lady.class).subscribe(new Action1<Lady>() {
             @Override
             public void call(Lady lady) {
                 Log.d("fxlts","onclick");
+                startPageFragment(lady.mUrl);
             }
         });
         
@@ -43,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
     private void showEmptyView(){
 
     }
-    private void startPageFragment(){
+    private void startPageFragment(String url){
+        GirlPageFragment fragment=GirlPageFragment.Instance(url);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content,new GirlPageFragment())
+                .replace(R.id.content,fragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss ();
+        new GirlPresenter(fragment,mfetcher);
     }
 
     @Override

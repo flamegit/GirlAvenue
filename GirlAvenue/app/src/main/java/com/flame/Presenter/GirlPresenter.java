@@ -12,6 +12,7 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
     Fetcher mFetcher;
     public GirlPresenter(GirlContract.View view,Fetcher fetcher){
         mView=view;
+        mFetcher=fetcher;
         mView.setPresenter(this);
     }
 
@@ -20,6 +21,11 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         mView.fillView(results);
         mView.hideProgress();
         isLoading=false;
+    }
+
+    @Override
+    public void onLoad(String item) {
+        mView.fillView(item);
     }
 
     @Override
@@ -36,6 +42,12 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         mView.showProgress();
         isLoading=true;
         mFetcher.loadData(this);
+    }
+
+    @Override
+    public void getLadyImages(String url) {
+        mView.showProgress();
+        mFetcher.loadPagerData(url,this);
     }
 
     @Override

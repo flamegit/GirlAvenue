@@ -12,11 +12,14 @@ public interface GirlContract {
         void showProgress();
         void hideProgress();
         void fillView(List results);
+        void fillView(String item);
 
     }
     interface Presenter{
         void getGirlList();
         void start();
         void getNext();
+        void getLadyImages(String url);
+
     }
 }

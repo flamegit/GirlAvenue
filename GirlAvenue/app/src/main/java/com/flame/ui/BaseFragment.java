@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.flame.presenter.GirlContract;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2016/10/8.
  */
@@ -30,10 +32,10 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mPresenter.start();
-    }
+    public void fillView(String item){}
+
+    @Override
+    public void fillView(List items){}
 
     abstract void initView(View view);
     abstract int getLayout();

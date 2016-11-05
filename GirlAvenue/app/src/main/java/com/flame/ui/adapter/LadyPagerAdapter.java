@@ -1,15 +1,11 @@
-package com.flame.Adapter;
+package com.flame.ui.adapter;
 
-import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.flame.model.Response;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
+import com.flame.model.Girl;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -19,24 +15,19 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/8/13.
  */
-public class GirlAdapter extends android.support.v4.view.PagerAdapter {
+public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
 
-    List<Response.Girl> mResults;
+    List<String> mResults;
     List mCacheView;
 
-    public GirlAdapter(){
+    public LadyPagerAdapter(){
         mResults=new ArrayList<>(10);
-
     }
 
-    public void addItems( List<Response.Girl> items){
-
-        Log.d("Girl",items.size()+"");
-        mResults.addAll(items);
-
+    public void addItem( String item){
+        mResults.add(item);
         notifyDataSetChanged();
     }
-
 
     @Override
     public int getCount() {
@@ -65,11 +56,9 @@ public class GirlAdapter extends android.support.v4.view.PagerAdapter {
         }else {
             imageView=new ImageView(container.getContext());
         }
-        Picasso.with(container.getContext()).load(mResults.get(position).url)
+        Picasso.with(container.getContext()).load(mResults.get(position))
                 .into(imageView);
-
         container.addView(imageView);
         return imageView;
-
     }
 }

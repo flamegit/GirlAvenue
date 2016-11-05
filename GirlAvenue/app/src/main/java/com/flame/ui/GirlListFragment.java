@@ -27,6 +27,12 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
+    }
+
+    @Override
     void initView(View view) {
         RecyclerView recyclerView=(RecyclerView)view.findViewById(R.id.view_list);
         mRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
@@ -38,12 +44,12 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(!recyclerView.canScrollVertically(1)){
-                    //mPresenter.refresh();
+                   // mPresenter.refresh();
                 }
             }
         });
         recyclerView.setHasFixedSize(true);
-       // mAdapter=new GirlListAdapter<Lady>();
+        mAdapter=new GirlListAdapter<Lady>(getContext());
         recyclerView.setAdapter(mAdapter);
         mRefreshLayout.post(new Runnable() {
             @Override

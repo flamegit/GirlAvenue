@@ -26,19 +26,19 @@ import rx.schedulers.Schedulers;
  */
 public class RemoteLadylFetcher extends Fetcher {
 
-    private RemoteLadylFetcher(){
+    public RemoteLadylFetcher(){
     }
 
-    public static RemoteLadylFetcher getInstance(){
-        return new RemoteLadylFetcher();
-    }
+//    public static RemoteLadylFetcher getInstance(){
+//        return new RemoteLadylFetcher();
+//    }
 
     @Override
-    public void loadData(Callback callback) {
+    public void loadData(final Callback callback) {
         Observable.create(new Observable.OnSubscribe<List<Lady>>() {
             @Override
             public void call(Subscriber<? super List<Lady>> subscriber) {
-                List<Lady> ladys = HtmlParse.getHtmlContent("http://www.mzitu.com/");
+                List<Lady> ladys = HtmlParse.getLadyCover("http://www.mzitu.com/");
                 subscriber.onNext(ladys);
                 subscriber.onCompleted();
             }
@@ -54,8 +54,40 @@ public class RemoteLadylFetcher extends Fetcher {
                     }
                     @Override
                     public void onNext(List<Lady> ladies) {
+                        callback.onLoad(ladies);
                     }
                 });
+    }
+
+
+    @Override
+    public void loadPagerData(final String baseUrl, final Callback callback) {
+
+        Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                int num=HtmlParse.getLadyNum(baseUrl);
+                for(int i=1;i<=num;i++){
+                    subscriber.onNext( HtmlParse.getLadyImage(baseUrl,i));
+                }
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                    @Override
+                    public void onNext(String src) {
+                        callback.onLoad(src);
+                    }
+                });
+
     }
 }
 

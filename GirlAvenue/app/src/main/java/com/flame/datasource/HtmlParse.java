@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.flame.model.Lady;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,28 +19,55 @@ import java.util.List;
  * Created by Administrator on 2016/10/14.
  */
 public class HtmlParse {
-    public static List<Lady> getHtmlContent(String url){
+   // String rule="{\"select\":\"ul#pins>li\",\"num\":\"all\",\"tag\":\"a\",\"attr\":\"href\",\"tag\":\"img\",\"attr\":\"alt\"\"attr\":\"data-original\"}";
+
+    public static List<Lady> getLadyCover(String url){
         List<Lady> list=new ArrayList<>();
         try {
             Document document=Jsoup.connect(url).get();
-            Elements uls=document.select("ul[id=pins]");
-            if(uls.size()!=1){
-                Log.d("fxlts","not found");
-            }
-            for(Element element:uls.get(0).getElementsByTag("li")){
-               list.add(parseTag(element));
+            Elements elements=document.select("ul#pins>li>a");
+            for(Element element:elements){
+                Lady lady=new Lady();
+                lady.mUrl= element.attr("href");
+                Element img= element.getElementsByTag("img").first();
+                lady.mDes =img.attr("alt");
+                lady.mThumbUrl=img.attr("data-original");
+                list.add(lady);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return list;
     }
-    private static Lady parseTag(Element element){
-        Lady lady=new Lady();
-        lady.mUrl= element.attr("href");
-        Element img= element.getElementsByTag("img").get(0);
-        lady.mDes =img.attr("alt");
-        lady.mThumbUrl=img.attr("data-original");
-        return lady;
+
+    public static int getLadyNum(String url){
+        int num=0;
+        try {
+            Document document=Jsoup.connect(url).get();
+            Elements elements=document.select("div.pagenavi>a");
+            int size=elements.size();
+            Element a=elements.get(size-2);
+            Element span= a.getElementsByTag("span").first();
+            num=Integer.valueOf(span.html());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return num;
     }
+
+    public static String getLadyImage(String baseUrl,int index){
+        String src=null;
+        try {
+            String url=baseUrl+"/"+index;
+            Document document=Jsoup.connect(url).get();
+            Element element=document.select("div.main-image>p>a").first();
+            Element img= element.getElementsByTag("img").first();
+            src=img.attr("src");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return src;
+    }
+
+
 }
