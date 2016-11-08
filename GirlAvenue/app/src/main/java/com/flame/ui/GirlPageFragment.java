@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.flame.ui.adapter.GirlAdapter;
 import com.flame.ui.adapter.LadyPagerAdapter;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -72,4 +73,6 @@ public class GirlPageFragment extends BaseFragment {
         });
         viewPager.setAdapter(mAdapter);
     }
+
+
 }

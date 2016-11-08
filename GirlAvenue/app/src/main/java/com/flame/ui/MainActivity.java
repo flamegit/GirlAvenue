@@ -20,23 +20,24 @@ import rx.functions.Action1;
 public class MainActivity extends AppCompatActivity {
 
     Fetcher mfetcher;
+    GirlListFragment mfragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        GirlListFragment fragment=new GirlListFragment();
         if(!NetWorkUtils.isNetworkConnected(this)){
 
         }
         if (savedInstanceState == null) {
+            mfragment=new GirlListFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content,fragment)
+                    .add(R.id.content,mfragment)
                     .commit();
         }
         mfetcher=new RemoteLadylFetcher();
-        new GirlPresenter(fragment,mfetcher);
+        new GirlPresenter(mfragment,mfetcher);
 
         RxBus.getDefault().toObservable(Lady.class).subscribe(new Action1<Lady>() {
             @Override

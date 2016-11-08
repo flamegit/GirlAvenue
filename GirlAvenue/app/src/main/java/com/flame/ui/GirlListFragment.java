@@ -1,4 +1,5 @@
 package com.flame.ui;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -8,6 +9,7 @@ import com.flame.ui.adapter.GirlListAdapter;
 import com.flame.model.Lady;
 
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -78,4 +80,5 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
     public void onRefresh() {
        // mPresenter.refresh();
     }
+
 }
