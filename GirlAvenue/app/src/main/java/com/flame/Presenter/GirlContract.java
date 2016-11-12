@@ -1,5 +1,7 @@
 package com.flame.presenter;
 
+import com.flame.model.Lady;
+
 import java.util.List;
 
 /**
@@ -20,6 +22,7 @@ public interface GirlContract {
         void start();
         void getNext();
         void getLadyImages(String url);
+        void cancel();
 
     }
 }

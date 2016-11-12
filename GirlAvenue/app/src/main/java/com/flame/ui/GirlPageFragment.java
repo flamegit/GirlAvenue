@@ -2,10 +2,13 @@ package com.flame.ui;
 
 
 
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,10 +24,20 @@ import java.util.List;
  */
 public class GirlPageFragment extends BaseFragment {
 
-   // GirlAdapter mAdapter;
     LadyPagerAdapter mAdapter;
+    int mIndex;
+    String mUrl;
 
     public GirlPageFragment(){
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Intent intent=getActivity().getIntent();
+        mUrl=intent.getStringExtra("url");
+        mIndex=intent.getIntExtra("index",0);
+        Log.d("fxlts","index"+mIndex);
     }
 
     public static GirlPageFragment Instance(String url){
@@ -44,8 +57,7 @@ public class GirlPageFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        String arg=getArguments().getString("url");
-        mPresenter.getLadyImages(arg);
+
     }
 
     @Override
@@ -62,16 +74,34 @@ public class GirlPageFragment extends BaseFragment {
     void initView(View view) {
         final ViewPager viewPager=(ViewPager) view.findViewById(R.id.view_pager);
         final TextView textView=(TextView)view.findViewById(R.id.index_view);
-        mAdapter=new LadyPagerAdapter();
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+            @Override
+            public void onPageSelected(int position) {
+                int p=position+1;
+                textView.setText(p + "/"+mAdapter.getCount());
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        mAdapter=new LadyPagerAdapter(mUrl);
         mAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
                 int num=mAdapter.getCount();
                 textView.setText("1/"+num);
+
             }
         });
         viewPager.setAdapter(mAdapter);
+        viewPager.setCurrentItem(mIndex);
     }
 
 

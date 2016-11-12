@@ -24,6 +24,7 @@ public class HtmlParse {
     public static List<Lady> getLadyCover(String url){
         List<Lady> list=new ArrayList<>();
         try {
+
             Document document=Jsoup.connect(url).get();
             Elements elements=document.select("ul#pins>li>a");
             for(Element element:elements){

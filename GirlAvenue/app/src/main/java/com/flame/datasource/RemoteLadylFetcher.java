@@ -6,6 +6,7 @@ import com.flame.model.Girl;
 import com.flame.model.Lady;
 import com.flame.model.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +18,7 @@ import retrofit2.http.Path;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -26,16 +28,41 @@ import rx.schedulers.Schedulers;
  */
 public class RemoteLadylFetcher extends Fetcher {
 
-    public RemoteLadylFetcher(){
+    private static volatile Fetcher mInstance;
+    Callback mCallback;
+    List<Lady> mLadies;
+    Subscription mCover;
+    Subscription mList;
+    public static Fetcher getInstance(){
+        if(mInstance==null) {
+            synchronized (RemoteGirlFetcher.class){
+                if(mInstance==null){
+                   mInstance=new RemoteLadylFetcher();
+                }
+            }
+        }
+        return mInstance;
     }
 
-//    public static RemoteLadylFetcher getInstance(){
-//        return new RemoteLadylFetcher();
-//    }
+    private RemoteLadylFetcher(){
+
+    }
+
+    public void setCallback(Callback callback){
+        mCallback=callback;
+    }
+
+    public Lady getLady(String url){
+        Lady tmp=new Lady();
+        tmp.mUrl=url;
+        int index=mLadies.indexOf(tmp);
+        Log.d("fxlts"," "+index);
+        return mLadies.get(index);
+    }
 
     @Override
     public void loadData(final Callback callback) {
-        Observable.create(new Observable.OnSubscribe<List<Lady>>() {
+        mCover= Observable.create(new Observable.OnSubscribe<List<Lady>>() {
             @Override
             public void call(Subscriber<? super List<Lady>> subscriber) {
                 List<Lady> ladys = HtmlParse.getLadyCover("http://www.mzitu.com/");
@@ -54,21 +81,27 @@ public class RemoteLadylFetcher extends Fetcher {
                     }
                     @Override
                     public void onNext(List<Lady> ladies) {
+                        mLadies=ladies;
                         callback.onLoad(ladies);
                     }
                 });
+
+    }
+
+    public void cancel(){
+        mList.unsubscribe();
     }
 
 
     @Override
-    public void loadPagerData(final String baseUrl, final Callback callback) {
-
-        Observable.create(new Observable.OnSubscribe<String>() {
+    public void loadPagerData(final String url, final Callback callback) {
+        final Lady lady=getLady(url);
+        mList= Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
-                int num=HtmlParse.getLadyNum(baseUrl);
+                int num=HtmlParse.getLadyNum(url);
                 for(int i=1;i<=num;i++){
-                    subscriber.onNext( HtmlParse.getLadyImage(baseUrl,i));
+                    subscriber.onNext( HtmlParse.getLadyImage(url,i));
                 }
                 subscriber.onCompleted();
             }
@@ -85,9 +118,15 @@ public class RemoteLadylFetcher extends Fetcher {
                     @Override
                     public void onNext(String src) {
                         callback.onLoad(src);
+                        if(lady.mList==null){
+                            lady.mList=new ArrayList<String>();
+                        }
+                        lady.mList.add(src);
+                        if( mCallback!=null){
+                            mCallback.onLoad(src);
+                        }
                     }
                 });
-
-    }
+        }
 }
 

@@ -10,7 +10,13 @@ public class Lady {
    public String mDes;
    public String mThumbUrl;
    public String mUrl;
-   public List<String> mList=new ArrayList<>();
+   public List<String> mList;
 
-
+   @Override
+   public boolean equals(Object o) {
+      if(o instanceof Lady){
+        return mUrl.equals(((Lady) o).mUrl);
+      }
+      return false;
+   }
 }

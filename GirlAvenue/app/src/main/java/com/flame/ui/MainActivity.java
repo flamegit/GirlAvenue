@@ -15,12 +15,14 @@ import com.flame.presenter.GirlPresenter;
 import com.flame.utils.NetWorkUtils;
 import com.flame.utils.RxBus;
 
+import rx.Subscription;
 import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
     Fetcher mfetcher;
     GirlListFragment mfragment;
+    Subscription mSubscription;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,28 +38,28 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content,mfragment)
                     .commit();
         }
-        mfetcher=new RemoteLadylFetcher();
+        mfetcher=RemoteLadylFetcher.getInstance();
         new GirlPresenter(mfragment,mfetcher);
 
-        RxBus.getDefault().toObservable(Lady.class).subscribe(new Action1<Lady>() {
+        mSubscription= RxBus.getDefault().toObservable(Lady.class).subscribe(new Action1<Lady>() {
             @Override
             public void call(Lady lady) {
-                Log.d("fxlts","onclick");
-                startPageFragment(lady.mUrl);
+                startPageFragment(lady.mUrl,lady.mDes);
             }
         });
+
         
     }
     private void showEmptyView(){
 
     }
-    private void startPageFragment(String url){
-        GirlPageFragment fragment=GirlPageFragment.Instance(url);
+    private void startPageFragment(String url,String desc){
+        LadyPreViewFragment fragment=LadyPreViewFragment.Instance(url,desc);
+        new GirlPresenter(fragment,mfetcher);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content,fragment)
                 .addToBackStack(null)
                 .commitAllowingStateLoss ();
-        new GirlPresenter(fragment,mfetcher);
     }
 
     @Override
@@ -76,5 +78,18 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSubscription.unsubscribe();
+
     }
 }

@@ -1,5 +1,7 @@
 package com.flame.presenter;
 import com.flame.datasource.Fetcher;
+import com.flame.model.Lady;
+
 import java.util.List;
 
 /**
@@ -57,6 +59,11 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         }
         isLoading=true;
         mFetcher.loadNextPage(this);
+    }
+
+    @Override
+    public void cancel() {
+        mFetcher.cancel();
     }
 
     @Override

@@ -1,4 +1,6 @@
 package com.flame.ui;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +33,12 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onResume() {
         super.onResume();
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mPresenter.start();
     }
 

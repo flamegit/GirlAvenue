@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flame.presenter.GirlContract;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -19,6 +20,8 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
 
     protected GirlContract.Presenter mPresenter;
     public BaseFragment(){
+       // Picasso picasso= Picasso.with(getContext());
+       // picasso.setLoggingEnabled(true);
     }
 
     @Override
@@ -41,19 +44,19 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
     abstract void initView(View view);
     abstract int getLayout();
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        try {
-            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-            childFragmentManager.setAccessible(true);
-            childFragmentManager.set(this, null);
-
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//
+//        try {
+//            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+//            childFragmentManager.setAccessible(true);
+//            childFragmentManager.set(this, null);
+//
+//        } catch (NoSuchFieldException e) {
+//            throw new RuntimeException(e);
+//        } catch (IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

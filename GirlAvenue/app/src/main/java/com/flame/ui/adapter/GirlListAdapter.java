@@ -60,6 +60,12 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
     public int getItemCount() {
         return isShowFooter ? mResults.size()+1:mResults.size();
     }
+
+    public void addItem( T items){
+        mResults.add(items);
+        notifyDataSetChanged();
+    }
+
     public void addItems( List<T> items){
         Log.d("Girl",items.size()+"");
         mResults.addAll(items);
