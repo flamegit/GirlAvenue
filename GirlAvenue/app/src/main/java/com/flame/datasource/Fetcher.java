@@ -12,21 +12,13 @@ import java.util.List;
  */
 public abstract class Fetcher {
 
-    protected int mPage;
-
     public interface Callback{
         void onLoad(String item);
         void onLoad(List results);
         void onError();
     }
 
-    public int loadNextPage(Callback callback){
-        mPage++;
-        loadData(callback);
-        return mPage;
-    }
-
-    public abstract void  loadData(Callback callback);
+    public abstract void  loadData(String url,Callback callback);
 
     public  void  loadPagerData(String url,Callback callback){
     }

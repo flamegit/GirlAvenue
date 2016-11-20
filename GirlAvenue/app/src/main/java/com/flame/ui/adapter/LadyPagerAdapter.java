@@ -26,6 +26,7 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
 
     List<String> mResults;
     List mCacheView;
+    ImageView mCurrItem;
 
     public LadyPagerAdapter(String url){
         RemoteLadylFetcher fetcher=(RemoteLadylFetcher)RemoteLadylFetcher.getInstance();
@@ -36,20 +37,26 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
                 notifyDataSetChanged();
                 Log.d("fxlts","callback");
             }
-
             @Override
             public void onLoad(List results) {
-
             }
-
             @Override
             public void onError() {
-
             }
         });
     }
 
-    public void addItem( String item){
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        super.setPrimaryItem(container, position, object);
+        mCurrItem=(ImageView)object;
+    }
+
+    public ImageView getPrimaryItem(){
+        return mCurrItem;
+    }
+
+    public void addItem(String item){
         mResults.add(item);
         notifyDataSetChanged();
     }

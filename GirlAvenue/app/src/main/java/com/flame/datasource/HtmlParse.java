@@ -41,6 +41,8 @@ public class HtmlParse {
         return list;
     }
 
+
+
     public static int getLadyNum(String url){
         int num=0;
         try {

@@ -38,15 +38,15 @@ public class RemoteGirlFetcher extends Fetcher{
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
-        mPage=1;
+
     }
 
     public static RemoteGirlFetcher getInstance(){
         return new RemoteGirlFetcher();
     }
 
-    public void loadData(final Fetcher.Callback callBack){
-      mRetrofit.create(NetApi.class).getGirlList(mPage)
+    public void loadData(final  String url,final Fetcher.Callback callBack){
+      mRetrofit.create(NetApi.class).getGirlList(1)
               .map(new Func1<Response, List<Girl>>() {
                   @Override
                   public List<Girl> call(Response response) {

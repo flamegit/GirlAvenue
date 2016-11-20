@@ -12,10 +12,18 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
     GirlContract.View mView;
     volatile boolean isLoading;
     Fetcher mFetcher;
+    private int mPage;
+
+    private static final String ENDURL="http://www.mzitu.com/";
+    private String path="page/";
+    private String baseUrl;
+
     public GirlPresenter(GirlContract.View view,Fetcher fetcher){
         mView=view;
         mFetcher=fetcher;
         mView.setPresenter(this);
+        mPage=1;
+        baseUrl=ENDURL;
     }
 
     @Override
@@ -23,6 +31,17 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         mView.fillView(results);
         mView.hideProgress();
         isLoading=false;
+    }
+
+    public int getPage(){
+        return mPage;
+    }
+
+    private String getCurrentPageUrl(){
+        if(mPage==1){
+            return baseUrl;
+        }
+        return baseUrl+path+mPage;
     }
 
     @Override
@@ -43,7 +62,7 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         }
         mView.showProgress();
         isLoading=true;
-        mFetcher.loadData(this);
+        mFetcher.loadData(getCurrentPageUrl(),this);
     }
 
     @Override
@@ -54,11 +73,14 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
 
     @Override
     public void getNext(){
-        if(isLoading){
-            return;
-        }
-        isLoading=true;
-        mFetcher.loadNextPage(this);
+        mPage++;
+        getGirlList();
+    }
+
+    @Override
+    public void getPrevious(){
+        mPage--;
+        getGirlList();
     }
 
     @Override

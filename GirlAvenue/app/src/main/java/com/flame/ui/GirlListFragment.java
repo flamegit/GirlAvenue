@@ -23,8 +23,18 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
 
     GirlListAdapter mAdapter;
     SwipeRefreshLayout mRefreshLayout;
+    RecyclerView mRecyclerView;
     public  GirlListFragment(){
     }
+
+    public static GirlListFragment Instance(String url){
+        GirlListFragment fragment=new GirlListFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("url",url);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     int getLayout() {
         return R.layout.girl_list;
@@ -39,17 +49,31 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mAdapter=new GirlListAdapter<Lady>(getContext(),mPresenter.getPage());
+        mAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v.getId()==R.id.previous_view){
+                    mPresenter.getPrevious();
+                }
+                if(v.getId()==R.id.next_view){
+                    mPresenter.getNext();
+                }
+
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
         mPresenter.start();
     }
 
     @Override
     void initView(View view) {
-        RecyclerView recyclerView=(RecyclerView)view.findViewById(R.id.view_list);
+        mRecyclerView=(RecyclerView)view.findViewById(R.id.view_list);
         mRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
         mRefreshLayout.setOnRefreshListener(this);
         StaggeredGridLayoutManager layoutManager=new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -58,9 +82,8 @@ public class GirlListFragment extends BaseFragment implements SwipeRefreshLayout
                 }
             }
         });
-        recyclerView.setHasFixedSize(true);
-        mAdapter=new GirlListAdapter<Lady>(getContext());
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        //bug no show progress
         mRefreshLayout.post(new Runnable() {
             @Override
             public void run() {

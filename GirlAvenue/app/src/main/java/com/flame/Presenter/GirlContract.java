@@ -21,6 +21,9 @@ public interface GirlContract {
         void getGirlList();
         void start();
         void getNext();
+        void getPrevious();
+
+        int getPage();
         void getLadyImages(String url);
         void cancel();
 

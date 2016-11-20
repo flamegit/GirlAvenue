@@ -27,8 +27,8 @@ import rx.schedulers.Schedulers;
  * Created by Administrator on 2016/10/3.
  */
 public class RemoteLadylFetcher extends Fetcher {
-
     private static volatile Fetcher mInstance;
+
     Callback mCallback;
     List<Lady> mLadies;
     Subscription mCover;
@@ -45,7 +45,6 @@ public class RemoteLadylFetcher extends Fetcher {
     }
 
     private RemoteLadylFetcher(){
-
     }
 
     public void setCallback(Callback callback){
@@ -56,16 +55,15 @@ public class RemoteLadylFetcher extends Fetcher {
         Lady tmp=new Lady();
         tmp.mUrl=url;
         int index=mLadies.indexOf(tmp);
-        Log.d("fxlts"," "+index);
         return mLadies.get(index);
     }
 
     @Override
-    public void loadData(final Callback callback) {
+    public void loadData(final String url,final Callback callback) {
         mCover= Observable.create(new Observable.OnSubscribe<List<Lady>>() {
             @Override
             public void call(Subscriber<? super List<Lady>> subscriber) {
-                List<Lady> ladys = HtmlParse.getLadyCover("http://www.mzitu.com/");
+                List<Lady> ladys = HtmlParse.getLadyCover(url);
                 subscriber.onNext(ladys);
                 subscriber.onCompleted();
             }
