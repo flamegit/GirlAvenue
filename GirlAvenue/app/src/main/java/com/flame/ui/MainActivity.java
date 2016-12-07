@@ -1,7 +1,11 @@
 package com.flame.ui;
 
 import android.os.Bundle;
+
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +16,7 @@ import com.flame.datasource.Fetcher;
 import com.flame.datasource.RemoteLadylFetcher;
 import com.flame.model.Lady;
 import com.flame.presenter.GirlPresenter;
+import com.flame.ui.adapter.LadyFragmentAdapter;
 import com.flame.utils.NetWorkUtils;
 import com.flame.utils.RxBus;
 
@@ -22,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     Fetcher mfetcher;
     GirlListFragment mfragment;
-    Subscription mSubscription;
+    //Subscription mSubscription;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,35 +37,48 @@ public class MainActivity extends AppCompatActivity {
         if(!NetWorkUtils.isNetworkConnected(this)){
 
         }
-        if (savedInstanceState == null) {
-            mfragment=new GirlListFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content,mfragment)
-                    .commit();
-        }
-        mfetcher=RemoteLadylFetcher.getInstance();
-        new GirlPresenter(mfragment,mfetcher);
+        TabLayout tabLayout=(TabLayout)findViewById(R.id.tab_layout);
+        ViewPager viewPager=(ViewPager)findViewById(R.id.fragment_view);
+        PagerAdapter adapter=new LadyFragmentAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
 
-        mSubscription= RxBus.getDefault().toObservable(Lady.class).subscribe(new Action1<Lady>() {
-            @Override
-            public void call(Lady lady) {
-                startPageFragment(lady.mUrl,lady.mDes);
-            }
-        });
+//        if (savedInstanceState == null) {
+//            mfragment=new GirlListFragment();
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.content,mfragment)
+//                    .commit();
+//        }
+//        mfetcher=RemoteLadylFetcher.getInstance();
+//        new GirlPresenter(mfragment,mfetcher);
+
+//        mSubscription= RxBus.getDefault().toObservable(Lady.class).subscribe(new Action1<Lady>() {
+//            @Override
+//            public void call(Lady lady) {
+//                startPageFragment(lady.mUrl,lady.mDes);
+//            }
+//        });
 
         
     }
     private void showEmptyView(){
 
     }
-    private void startPageFragment(String url,String desc){
-        LadyPreViewFragment fragment=LadyPreViewFragment.Instance(url,desc);
-        new GirlPresenter(fragment,mfetcher);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content,fragment)
-                .addToBackStack(null)
-                .commitAllowingStateLoss ();
+
+//    private void startPageFragment(String url,String desc){
+//        LadyPreViewFragment fragment=LadyPreViewFragment.Instance(url,desc);
+//        new GirlPresenter(fragment,mfetcher);
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.content,fragment)
+//                .addToBackStack(null)
+//                .commitAllowingStateLoss ();
+//    }
+
+
+    private void showDetail(){
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSubscription.unsubscribe();
+        //mSubscription.unsubscribe();
 
     }
 }

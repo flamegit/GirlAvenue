@@ -26,6 +26,10 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         baseUrl=ENDURL;
     }
 
+    public void  setBaseUrl(String url){
+        baseUrl=ENDURL+url;
+    }
+
     @Override
     public void onLoad(List results) {
         mView.fillView(results);

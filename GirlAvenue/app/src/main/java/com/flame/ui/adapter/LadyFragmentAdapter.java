@@ -12,6 +12,8 @@ import android.widget.ImageView;
 
 import com.flame.datasource.Fetcher;
 import com.flame.datasource.RemoteLadylFetcher;
+import com.flame.presenter.GirlPresenter;
+import com.flame.ui.GirlListFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -24,20 +26,29 @@ import uk.co.senab.photoview.PhotoView;
  */
 public class LadyFragmentAdapter extends FragmentPagerAdapter {
 
+    String[] titles={"最新","最热","推荐"};
+    String[] categories={"","/hot","/best"};
     public LadyFragmentAdapter(FragmentManager fm) {
         super(fm);
     }
 
+    @Override
+    public CharSequence getPageTitle(int position) {
+       // return super.getPageTitle(position);
+        return titles[position];
+    }
 
     @Override
     public int getCount() {
-        return 0;
+        return titles.length;
     }
 
 
     @Override
     public Fragment getItem(int position) {
-        return null;
+        GirlListFragment fragment= new GirlListFragment();
+        new GirlPresenter(fragment,RemoteLadylFetcher.getInstance()).setBaseUrl(categories[position]);
+        return fragment;
     }
 
 

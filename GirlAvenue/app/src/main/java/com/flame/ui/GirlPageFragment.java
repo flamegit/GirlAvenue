@@ -52,15 +52,15 @@ public class GirlPageFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Intent intent=getActivity().getIntent();
-        mUrl=intent.getStringExtra("url");
-        mIndex=intent.getIntExtra("index",0);
-        Log.d("fxlts","index"+mIndex);
+        Bundle bundle=getArguments();
+        mUrl=bundle.getString("url");
+        mIndex=bundle.getInt("index",0);
     }
-    public static GirlPageFragment Instance(String url){
+    public static GirlPageFragment Instance(String url, int index){
         GirlPageFragment fragment=new GirlPageFragment();
         Bundle bundle=new Bundle();
         bundle.putString("url",url);
+        bundle.putInt("index",index);
         fragment.setArguments(bundle);
         return fragment;
     }

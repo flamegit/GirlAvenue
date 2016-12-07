@@ -1,6 +1,7 @@
 package com.flame.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flame.model.Girl;
+import com.flame.ui.LadyViewActivity;
 import com.flame.ui.R;
 import com.flame.model.Lady;
 import com.flame.model.Response;
@@ -126,9 +128,18 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
             desc=girl.desc;
         }
         if(t instanceof Lady){
-            Lady lady=(Lady) t;
+            final Lady lady=(Lady) t;
             url=lady.mThumbUrl;
             desc=lady.mDes;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //RxBus.getDefault().post(t);
+                    Intent intent=new Intent(mContext, LadyViewActivity.class);
+                    intent.putExtra("url",lady.mUrl).putExtra("desc",lady.mDes);
+                    mContext.startActivity(intent);
+                }
+            });
         }
 
         Picasso picasso= Picasso.with(mContext);
@@ -137,12 +148,7 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
                 .noFade()
                 .into((ImageView)holder.imageView);
         holder.textView.setText(desc);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RxBus.getDefault().post(t);
-            }
-        });
+
     }
 
      static class ViewHolder extends RecyclerView.ViewHolder{
