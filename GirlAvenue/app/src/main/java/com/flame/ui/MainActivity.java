@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.flame.datasource.Fetcher;
-import com.flame.datasource.RemoteLadylFetcher;
+import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.model.Lady;
 import com.flame.presenter.GirlPresenter;
 import com.flame.utils.NetWorkUtils;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content,mfragment)
                     .commit();
         }
-        mfetcher=RemoteLadylFetcher.getInstance();
+        mfetcher=RemoteLadyFetcher.getInstance();
         new GirlPresenter(mfragment,mfetcher);
 
         mSubscription= RxBus.getDefault().toObservable(Lady.class).subscribe(new Action1<Lady>() {

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.flame.datasource.Fetcher;
 import com.flame.datasource.RemoteGirlFetcher;
-import com.flame.datasource.RemoteLadylFetcher;
+import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.model.Girl;
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +28,7 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
     List mCacheView;
 
     public LadyPagerAdapter(String url){
-        RemoteLadylFetcher fetcher=(RemoteLadylFetcher)RemoteLadylFetcher.getInstance();
+        RemoteLadyFetcher fetcher=(RemoteLadyFetcher)RemoteLadyFetcher.getInstance();
         mResults= fetcher.getLady(url).mList;
         fetcher.setCallback(new Fetcher.Callback() {
             @Override
@@ -36,15 +36,11 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
                 notifyDataSetChanged();
                 Log.d("fxlts","callback");
             }
-
             @Override
             public void onLoad(List results) {
-
             }
-
             @Override
             public void onError() {
-
             }
         });
     }

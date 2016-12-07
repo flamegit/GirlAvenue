@@ -5,9 +5,12 @@ import android.util.Log;
 import com.flame.model.Girl;
 import com.flame.model.Lady;
 import com.flame.model.Response;
+import com.flame.utils.CacheManager;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Retrofit;
@@ -26,26 +29,28 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Administrator on 2016/10/3.
  */
-public class RemoteLadylFetcher extends Fetcher {
+public class RemoteLadyFetcher extends Fetcher {
 
     private static volatile Fetcher mInstance;
     Callback mCallback;
-    List<Lady> mLadies;
     Subscription mCover;
     Subscription mList;
+    CacheManager mCaches;
+
+
     public static Fetcher getInstance(){
         if(mInstance==null) {
             synchronized (RemoteGirlFetcher.class){
                 if(mInstance==null){
-                   mInstance=new RemoteLadylFetcher();
+                   mInstance=new RemoteLadyFetcher();
                 }
             }
         }
         return mInstance;
     }
 
-    private RemoteLadylFetcher(){
-
+    private RemoteLadyFetcher(){
+        mCaches=new CacheManager();
     }
 
     public void setCallback(Callback callback){
@@ -53,11 +58,12 @@ public class RemoteLadylFetcher extends Fetcher {
     }
 
     public Lady getLady(String url){
-        Lady tmp=new Lady();
-        tmp.mUrl=url;
-        int index=mLadies.indexOf(tmp);
-        Log.d("fxlts"," "+index);
-        return mLadies.get(index);
+        Lady lady=mCaches.get(url);
+        if(lady==null){
+            lady=new Lady();
+            mCaches.save(url,lady);
+        }
+        return lady;
     }
 
     @Override
@@ -81,7 +87,6 @@ public class RemoteLadylFetcher extends Fetcher {
                     }
                     @Override
                     public void onNext(List<Lady> ladies) {
-                        mLadies=ladies;
                         callback.onLoad(ladies);
                     }
                 });
@@ -96,6 +101,10 @@ public class RemoteLadylFetcher extends Fetcher {
     @Override
     public void loadPagerData(final String url, final Callback callback) {
         final Lady lady=getLady(url);
+        // avoid duplicate
+        if(lady.mList!=null && lady.mList.size()>0){
+            lady.mList.clear();
+        }
         mList= Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
