@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.flame.datasource.Fetcher;
-import com.flame.datasource.RemoteLadylFetcher;
+import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.model.ShowDetailEvent;
 import com.flame.presenter.GirlPresenter;
 import com.flame.utils.RxBus;
@@ -40,7 +40,7 @@ public class LadyViewActivity extends AppCompatActivity {
                     .add(android.R.id.content, ladyPreViewFragment)
                     .commit();
         }
-        new GirlPresenter(ladyPreViewFragment,RemoteLadylFetcher.getInstance());
+        new GirlPresenter(ladyPreViewFragment,RemoteLadyFetcher.getInstance());
 
         mSubscription= RxBus.getDefault().toObservable(ShowDetailEvent.class).subscribe(new Action1<ShowDetailEvent>() {
             @Override
@@ -53,7 +53,7 @@ public class LadyViewActivity extends AppCompatActivity {
 
     private void showPageFragment(String url,int index){
         GirlPageFragment fragment=GirlPageFragment.Instance(url,index);
-        new GirlPresenter(fragment, RemoteLadylFetcher.getInstance());
+        new GirlPresenter(fragment, RemoteLadyFetcher.getInstance());
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content,fragment)
                 .addToBackStack(null)

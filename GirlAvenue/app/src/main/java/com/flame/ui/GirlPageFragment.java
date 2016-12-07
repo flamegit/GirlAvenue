@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.flame.datasource.RemoteLadylFetcher;
+import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.ui.adapter.GirlAdapter;
 import com.flame.ui.adapter.LadyPagerAdapter;
 
@@ -75,7 +75,7 @@ public class GirlPageFragment extends BaseFragment {
         super.onResume();
     }
     private String createFileName(){
-        RemoteLadylFetcher fetcher=(RemoteLadylFetcher)RemoteLadylFetcher.getInstance();
+        RemoteLadyFetcher fetcher=(RemoteLadyFetcher)RemoteLadyFetcher.getInstance();
         String des=fetcher.getLady(mUrl).mDes;
         int index=mIndex+1;
         return des +index +".png";

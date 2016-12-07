@@ -1,33 +1,26 @@
 package com.flame.ui;
 
 import android.os.Bundle;
-
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.flame.datasource.Fetcher;
-import com.flame.datasource.RemoteLadylFetcher;
-import com.flame.model.Lady;
+import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.presenter.GirlPresenter;
 import com.flame.ui.adapter.LadyFragmentAdapter;
 import com.flame.utils.NetWorkUtils;
-import com.flame.utils.RxBus;
 
-import rx.Subscription;
-import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
     Fetcher mfetcher;
     GirlListFragment mfragment;
-    //Subscription mSubscription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

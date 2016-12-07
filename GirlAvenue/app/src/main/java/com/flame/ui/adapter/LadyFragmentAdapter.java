@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.flame.datasource.Fetcher;
-import com.flame.datasource.RemoteLadylFetcher;
+import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.presenter.GirlPresenter;
 import com.flame.ui.GirlListFragment;
 import com.squareup.picasso.Picasso;
@@ -47,7 +47,7 @@ public class LadyFragmentAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         GirlListFragment fragment= new GirlListFragment();
-        new GirlPresenter(fragment,RemoteLadylFetcher.getInstance()).setBaseUrl(categories[position]);
+        new GirlPresenter(fragment,RemoteLadyFetcher.getInstance()).setBaseUrl(categories[position]);
         return fragment;
     }
 
