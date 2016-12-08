@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.flame.model.Girl;
-import com.flame.model.Response;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

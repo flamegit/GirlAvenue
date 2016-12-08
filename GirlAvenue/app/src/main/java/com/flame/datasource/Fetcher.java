@@ -1,10 +1,5 @@
 package com.flame.datasource;
 
-import android.support.v4.widget.ViewDragHelper;
-
-import com.flame.model.Girl;
-import com.flame.model.Lady;
-
 import java.util.List;
 
 /**

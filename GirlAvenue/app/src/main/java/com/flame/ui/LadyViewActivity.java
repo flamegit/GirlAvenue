@@ -1,12 +1,11 @@
 package com.flame.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 
-import com.flame.datasource.Fetcher;
 import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.model.ShowDetailEvent;
 import com.flame.presenter.GirlPresenter;

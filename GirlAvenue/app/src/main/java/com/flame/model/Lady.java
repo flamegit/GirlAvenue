@@ -1,6 +1,5 @@
 package com.flame.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

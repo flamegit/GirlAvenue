@@ -8,12 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.flame.datasource.Fetcher;
-import com.flame.datasource.RemoteGirlFetcher;
 import com.flame.datasource.RemoteLadyFetcher;
-import com.flame.model.Girl;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

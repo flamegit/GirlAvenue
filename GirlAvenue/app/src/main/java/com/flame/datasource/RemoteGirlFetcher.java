@@ -3,14 +3,11 @@ package com.flame.datasource;
 import android.util.Log;
 
 import com.flame.model.Girl;
-import com.flame.model.Lady;
 import com.flame.model.Response;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -19,7 +16,6 @@ import retrofit2.http.Path;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 

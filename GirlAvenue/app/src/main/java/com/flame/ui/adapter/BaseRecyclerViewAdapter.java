@@ -2,19 +2,6 @@ package com.flame.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.flame.model.Girl;
-import com.flame.model.Lady;
-import com.flame.ui.R;
-import com.flame.utils.RxBus;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;

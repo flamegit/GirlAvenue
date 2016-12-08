@@ -1,6 +1,6 @@
 package com.flame.presenter;
+
 import com.flame.datasource.Fetcher;
-import com.flame.model.Lady;
 
 import java.util.List;
 

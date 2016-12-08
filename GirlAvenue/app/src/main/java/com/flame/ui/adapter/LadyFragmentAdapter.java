@@ -1,25 +1,12 @@
 package com.flame.ui.adapter;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.flame.datasource.Fetcher;
 import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.presenter.GirlPresenter;
 import com.flame.ui.GirlListFragment;
-import com.squareup.picasso.Picasso;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * Created by Administrator on 2016/8/13.

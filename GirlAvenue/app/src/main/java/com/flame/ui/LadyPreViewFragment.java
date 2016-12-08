@@ -2,16 +2,11 @@ package com.flame.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 
-import com.flame.model.Lady;
-import com.flame.ui.adapter.GirlListAdapter;
-import com.flame.ui.adapter.LadyPagerAdapter;
 import com.flame.ui.adapter.LadyPreViewAdapter;
 import com.flame.ui.adapter.SpaceItemDecoration;
 

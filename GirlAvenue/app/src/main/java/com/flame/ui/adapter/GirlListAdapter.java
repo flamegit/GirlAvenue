@@ -12,11 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flame.model.Girl;
+import com.flame.model.Lady;
 import com.flame.ui.LadyViewActivity;
 import com.flame.ui.R;
-import com.flame.model.Lady;
-import com.flame.model.Response;
-import com.flame.utils.RxBus;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

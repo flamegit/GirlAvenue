@@ -1,11 +1,7 @@
 package com.flame.datasource;
 
-import android.util.Log;
-
 import com.flame.model.Lady;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

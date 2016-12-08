@@ -1,29 +1,14 @@
 package com.flame.datasource;
 
-import android.util.Log;
-
-import com.flame.model.Girl;
 import com.flame.model.Lady;
-import com.flame.model.Response;
 import com.flame.utils.CacheManager;
-
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -97,6 +82,15 @@ public class RemoteLadyFetcher extends Fetcher {
         mList.unsubscribe();
     }
 
+    private boolean loadFromCache(String url,Callback callback){
+        if(mCaches.isCached(url)){
+            Lady lady=getLady(url);
+            callback.onLoad(lady.mList);
+            return  true;
+        }
+        return false;
+    }
+
 
     @Override
     public void loadPagerData(final String url, final Callback callback) {
@@ -120,6 +114,7 @@ public class RemoteLadyFetcher extends Fetcher {
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onCompleted() {
+                        mCaches.loadComplete(url);
                     }
                     @Override
                     public void onError(Throwable e) {
