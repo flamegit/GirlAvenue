@@ -94,6 +94,10 @@ public class RemoteLadyFetcher extends Fetcher {
 
     @Override
     public void loadPagerData(final String url, final Callback callback) {
+        if(loadFromCache(url,callback)){
+            return;
+        }
+
         final Lady lady=getLady(url);
         // avoid duplicate
         if(lady.mList!=null && lady.mList.size()>0){

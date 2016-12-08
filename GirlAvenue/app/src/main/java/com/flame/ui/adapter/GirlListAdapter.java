@@ -34,8 +34,6 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
     private static final int FOOTER=1;
     private static final int NAVIGATION=2;
 
-
-
     public GirlListAdapter(Context context, int page){
         mContext=context;
         mResults=new ArrayList<>(10);

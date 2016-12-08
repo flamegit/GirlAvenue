@@ -2,6 +2,7 @@ package com.flame.utils;
 
 import com.flame.model.Lady;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class CacheManager {
 
     public CacheManager(){
         mCache= new LinkedHashMap<String,Lady>();
+        mUrls=new ArrayList<String>();
     }
 
     public void save(String key, Lady value){
