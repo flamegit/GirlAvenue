@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.flame.datasource.RemoteLadyFetcher;
-//import com.flame.model.ShowDetailEvent;
+import com.flame.model.ShowDetailEvent;
 import com.flame.presenter.GirlPresenter;
 import com.flame.utils.RxBus;
 
@@ -41,12 +41,12 @@ public class LadyViewActivity extends AppCompatActivity {
         }
         new GirlPresenter(ladyPreViewFragment,RemoteLadyFetcher.getInstance());
 
-//        mSubscription= RxBus.getDefault().toObservable(ShowDetailEvent.class).subscribe(new Action1<ShowDetailEvent>() {
-//            @Override
-//            public void call(ShowDetailEvent event) {
-//                showPageFragment(event.url,event.index);
-//            }
-//        });
+        mSubscription= RxBus.getDefault().toObservable(ShowDetailEvent.class).subscribe(new Action1<ShowDetailEvent>() {
+            @Override
+            public void call(ShowDetailEvent event) {
+                showPageFragment(event.url,event.index);
+            }
+        });
 
     }
 
