@@ -28,6 +28,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 /**
  * Created by Administrator on 2016/10/7.
  */
@@ -36,6 +38,7 @@ public class GirlPageFragment extends BaseFragment {
     LadyPagerAdapter mAdapter;
     int mIndex;
     String mUrl;
+    View mActionView;
     public GirlPageFragment(){
 
     }
@@ -137,7 +140,7 @@ public class GirlPageFragment extends BaseFragment {
     void initView(View view) {
         final ViewPager viewPager=(ViewPager) view.findViewById(R.id.view_pager);
         final TextView textView=(TextView)view.findViewById(R.id.index_view);
-        final View actionView=view.findViewById(R.id.bottom_action_view);
+        mActionView =view.findViewById(R.id.bottom_action_view);
         View saveView=view.findViewById(R.id.save_view);
         saveView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,19 +148,6 @@ public class GirlPageFragment extends BaseFragment {
                 saveLadyImage();
             }
         });
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 if(actionView.getAlpha()>0){
-                     actionView.animate().alpha(0);
-                 }else {
-                     actionView.animate().alpha(1);
-                 }
-
-            }
-        });
-
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -184,6 +174,17 @@ public class GirlPageFragment extends BaseFragment {
 
             }
         });
+        mAdapter.setTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+               if(mActionView.getAlpha()>0){
+                   mActionView.animate().alpha(0);
+               } else{
+                   mActionView.animate().alpha(1);
+               }
+            }
+        });
+
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mIndex);
         viewPager.getFocusedChild();

@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by Administrator on 2016/8/13.
@@ -24,6 +25,8 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
     List<String> mResults;
     List mCacheView;
     ImageView mCurrItem;
+    PhotoViewAttacher.OnViewTapListener mListener;
+
 
     public LadyPagerAdapter(String url){
         RemoteLadyFetcher fetcher=(RemoteLadyFetcher)RemoteLadyFetcher.getInstance();
@@ -42,6 +45,12 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
             }
         });
     }
+
+    public void setTapListener(PhotoViewAttacher.OnViewTapListener listener){
+        mListener=listener;
+    }
+
+
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
@@ -86,6 +95,7 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
         }else {
             photoView=new PhotoView(container.getContext());
             photoView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            photoView.setOnViewTapListener(mListener);
         }
         Picasso.with(container.getContext())
                 .load(mResults.get(position))

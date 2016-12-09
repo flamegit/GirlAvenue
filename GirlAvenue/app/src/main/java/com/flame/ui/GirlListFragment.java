@@ -1,5 +1,6 @@
 package com.flame.ui;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -7,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+
 import com.flame.model.Lady;
 import com.flame.ui.adapter.GirlListAdapter;
 import java.util.List;
@@ -21,7 +24,7 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
     GirlListAdapter mAdapter;
     RecyclerView mRecyclerView;
 
-    View mPreviousView;
+    TextView mPreviousView;
     public  GirlListFragment(){
     }
     public static GirlListFragment Instance(String url){
@@ -53,7 +56,7 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
         mRecyclerView=(RecyclerView)view.findViewById(R.id.view_list);
         final View bottomView=view.findViewById(R.id.bottom_nav_view);
         View nextView=bottomView.findViewById(R.id.next_view);
-        mPreviousView=bottomView.findViewById(R.id.previous_view);
+        mPreviousView=(TextView)bottomView.findViewById(R.id.previous_view);
         mPreviousView.setClickable(false);
 
         mPreviousView.setOnClickListener(this);
@@ -107,10 +110,15 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
 
         if(mPresenter.getPage()>1){
             mPreviousView.setClickable(true);
-            mPreviousView.setVisibility(View.VISIBLE);
+            mPreviousView.setTextColor(getResources().getColor(R.color.colorPrimary));
         }else {
             mPreviousView.setClickable(false);
-            mPreviousView.setVisibility(View.INVISIBLE);
+            mPreviousView.setTextColor(getResources().getColor(R.color.gray));
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

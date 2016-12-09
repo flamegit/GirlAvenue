@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="15dp"
-        android:paddingTop="5dp"
+        android:paddingTop="15dp"
         android:visibility="gone">
 
         <TextView
@@ -33,9 +33,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Previous Page"
-            android:onClick="loadNext"
-            android:visibility="invisible"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/gray"
             android:textSize="15sp" />
 
         <TextView
@@ -45,7 +43,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Next Page"
-            android:onClick="loadPrevious"
             android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
     </LinearLayout>
