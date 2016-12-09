@@ -2,6 +2,7 @@ package com.flame.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,12 +21,13 @@ import java.util.List;
 public class LadyPreViewFragment extends BaseFragment {
 
     LadyPreViewAdapter mAdapter;
+    SwipeRefreshLayout mRefreshLayout;
 
     public LadyPreViewFragment(){
     }
     @Override
     int getLayout() {
-        return R.layout.girl_list;
+        return R.layout.girl_preview;
     }
 
     public static LadyPreViewFragment Instance(String url,String desc) {
@@ -59,19 +61,28 @@ public class LadyPreViewFragment extends BaseFragment {
     @Override
     void initView(View view) {
         RecyclerView recyclerView=(RecyclerView)view.findViewById(R.id.view_list);
+        mRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
         GridLayoutManager layoutManager=new GridLayoutManager(getContext(),3);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new SpaceItemDecoration(3));
         mAdapter=new LadyPreViewAdapter(getContext(),getArguments().getString("url"));
         recyclerView.setAdapter(mAdapter);
-
+        //bug no show progress
+        mRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRefreshLayout.setRefreshing(true);
+            }
+        },300);
     }
     @Override
     public void showProgress() {
+        mRefreshLayout.setRefreshing(true);
     }
     @Override
     public void hideProgress() {
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
