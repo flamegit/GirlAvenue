@@ -13,28 +13,33 @@ import com.flame.ui.GirlListFragment;
  */
 public class LadyFragmentAdapter extends FragmentPagerAdapter {
 
-    String[] titles={"最新","最热","推荐"};
-    String[] categories={"","/hot","/best"};
-    public LadyFragmentAdapter(FragmentManager fm) {
+    String[][] titles={{"最新","最热","推荐"},{}};
+    String[][] paths={{"","/hot","/best"},{}};
+
+    int type;
+
+
+    public LadyFragmentAdapter(FragmentManager fm, int type) {
         super(fm);
+        this.type=type;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
        // return super.getPageTitle(position);
-        return titles[position];
+        return titles[type][position];
     }
 
     @Override
     public int getCount() {
-        return titles.length;
+        return titles[type].length;
     }
 
 
     @Override
     public Fragment getItem(int position) {
         GirlListFragment fragment= new GirlListFragment();
-        new GirlPresenter(fragment,RemoteLadyFetcher.getInstance()).setBaseUrl(categories[position]);
+        new GirlPresenter(fragment,RemoteLadyFetcher.getInstance()).setBaseUrl(paths[type][position]);
         return fragment;
     }
 

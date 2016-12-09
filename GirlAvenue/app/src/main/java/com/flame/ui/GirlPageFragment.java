@@ -36,14 +36,12 @@ public class GirlPageFragment extends BaseFragment {
     LadyPagerAdapter mAdapter;
     int mIndex;
     String mUrl;
-    List mSaveList;
     public GirlPageFragment(){
-        mSaveList=new ArrayList();
+
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         Bundle bundle=getArguments();
         mUrl=bundle.getString("url");
         mIndex=bundle.getInt("index",0);
@@ -67,8 +65,7 @@ public class GirlPageFragment extends BaseFragment {
         super.onResume();
     }
     private String createFileName(){
-        RemoteLadyFetcher fetcher=(RemoteLadyFetcher)RemoteLadyFetcher.getInstance();
-        String des=fetcher.getLady(mUrl).mDes;
+        String des=getActivity().getTitle().toString();
         int index=mIndex+1;
         return des +index +".png";
     }
@@ -117,16 +114,11 @@ public class GirlPageFragment extends BaseFragment {
             }
         }.execute();
     }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.lady_view_menu, menu);
-        return;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       // return super.onOptionsItemSelected(item);
+        super.onOptionsItemSelected(item);
         if(item.getItemId()==R.id.action_save){
             saveLadyImage();
         }
@@ -145,10 +137,30 @@ public class GirlPageFragment extends BaseFragment {
     void initView(View view) {
         final ViewPager viewPager=(ViewPager) view.findViewById(R.id.view_pager);
         final TextView textView=(TextView)view.findViewById(R.id.index_view);
+        final View actionView=view.findViewById(R.id.bottom_action_view);
+        View saveView=view.findViewById(R.id.save_view);
+        saveView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveLadyImage();
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 if(actionView.getAlpha()>0){
+                     actionView.animate().alpha(0);
+                 }else {
+                     actionView.animate().alpha(1);
+                 }
+
+            }
+        });
+
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
             @Override
             public void onPageSelected(int position) {

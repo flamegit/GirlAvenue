@@ -40,8 +40,8 @@ public class LadyPreViewFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setTitle(getArguments().getString("desc"));
 
+        getActivity().setTitle(getArguments().getString("desc"));
     }
 
     @Override
@@ -69,11 +69,9 @@ public class LadyPreViewFragment extends BaseFragment {
     }
     @Override
     public void showProgress() {
-        //mAdapter.showFooter();
     }
     @Override
     public void hideProgress() {
-       // mAdapter.hideFooter();
     }
 
     @Override

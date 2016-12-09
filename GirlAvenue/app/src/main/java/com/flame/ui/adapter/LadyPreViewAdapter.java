@@ -36,7 +36,8 @@ public class LadyPreViewAdapter extends RecyclerView.Adapter<LadyPreViewAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ImageView imageView=new ImageView(parent.getContext());
-        GridLayoutManager.LayoutParams params=new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,300);
+        int h=parent.getHeight()/4;
+        GridLayoutManager.LayoutParams params=new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,h);
         imageView.setLayoutParams(params);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         return new ViewHolder(imageView);
@@ -50,7 +51,6 @@ public class LadyPreViewAdapter extends RecyclerView.Adapter<LadyPreViewAdapter.
     public void addItem(String items){
         mResults.add(items);
         notifyItemInserted(mResults.size()-1);
-        Log.d("fxlts","add item");
     }
 
     public void addItems( List<String> items){

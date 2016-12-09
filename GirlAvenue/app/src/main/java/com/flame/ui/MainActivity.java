@@ -47,9 +47,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initView(){
+        int type=getIntent().getIntExtra("type",0);
         TabLayout tabLayout=(TabLayout)findViewById(R.id.tab_layout);
         ViewPager viewPager=(ViewPager)findViewById(R.id.fragment_view);
-        PagerAdapter adapter=new LadyFragmentAdapter(getSupportFragmentManager());
+        PagerAdapter adapter=new LadyFragmentAdapter(getSupportFragmentManager(),0);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }

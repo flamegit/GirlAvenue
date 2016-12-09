@@ -20,7 +20,6 @@ public class HtmlParse {
     public static List<Lady> getLadyCover(String url){
         List<Lady> list=new ArrayList<>();
         try {
-
             Document document=Jsoup.connect(url).get();
             Elements elements=document.select("ul#pins>li>a");
             for(Element element:elements){
@@ -36,8 +35,6 @@ public class HtmlParse {
         }
         return list;
     }
-
-
 
     public static int getLadyNum(String url){
         int num=0;
@@ -67,6 +64,5 @@ public class HtmlParse {
         }
         return src;
     }
-
 
 }

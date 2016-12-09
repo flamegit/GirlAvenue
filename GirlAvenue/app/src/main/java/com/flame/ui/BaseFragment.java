@@ -2,8 +2,12 @@ package com.flame.ui;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,11 +19,14 @@ import java.util.List;
  * Created by Administrator on 2016/10/8.
  */
 public abstract class BaseFragment extends Fragment implements GirlContract.View {
-
     protected GirlContract.Presenter mPresenter;
     public BaseFragment(){
-       // Picasso picasso= Picasso.with(getContext());
-       // picasso.setLoggingEnabled(true);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -42,19 +49,19 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
     abstract void initView(View view);
     abstract int getLayout();
 
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//
-//        try {
-//            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-//            childFragmentManager.setAccessible(true);
-//            childFragmentManager.set(this, null);
-//
-//        } catch (NoSuchFieldException e) {
-//            throw new RuntimeException(e);
-//        } catch (IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.lady_view_menu, menu);
+        return;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            getActivity().onBackPressed();
+        }
+        return true;
+    }
+
+
 }

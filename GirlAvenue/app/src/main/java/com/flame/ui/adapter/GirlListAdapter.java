@@ -40,10 +40,6 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
         mPage=page;
     }
 
-    public void setOnClickListener(View.OnClickListener listener){
-        mOnClickListener=listener;
-    }
-
     public void showFooter(){
         isShowFooter=true;
         notifyItemInserted(getItemCount());
@@ -58,10 +54,7 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
         View view;
         if(viewType==FOOTER){
             view= LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_view,parent,false);
-        }else if(viewType==NAVIGATION){
-            view= LayoutInflater.from(parent.getContext()).inflate(R.layout.navigation_view,parent,false);
-        }
-        else {
+        } else {
             view= LayoutInflater.from(parent.getContext()).inflate(R.layout.image_view,parent,false);
         }
         return new ViewHolder(view);
@@ -83,6 +76,7 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
             mResults.clear();
         }
         mResults.addAll(items);
+        //notifyItemRangeInserted(0,items.size());
         notifyDataSetChanged();
     }
 
@@ -90,9 +84,6 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
     public int getItemViewType(int position) {
         if(position==getItemCount()-1 && isShowFooter){
             return FOOTER;
-        }
-        if(position==getItemCount()-1){
-            return NAVIGATION;
         }
         return 0;
     }
@@ -104,18 +95,18 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
             layoutParams.setFullSpan(true);
             return;
         }
-        if(getItemViewType(position)==NAVIGATION){
-            StaggeredGridLayoutManager.LayoutParams layoutParams= (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-            layoutParams.setFullSpan(true);
-            View next= holder.itemView.findViewById(R.id.next_view);
-            next.setOnClickListener(mOnClickListener);
-            View previous=holder.itemView.findViewById(R.id.previous_view);
-            previous.setOnClickListener(mOnClickListener);
-            if(mPage==1){
-                previous.setClickable(false);
-            }
-            return;
-        }
+//        if(getItemViewType(position)==NAVIGATION){
+//            StaggeredGridLayoutManager.LayoutParams layoutParams= (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+//            layoutParams.setFullSpan(true);
+//            holder.itemView.setOnClickListener(mOnClickListener);
+////            View next= holder.itemView.findViewById(R.id.next_view);
+////            next.setOnClickListener(mOnClickListener);
+//            View previous=holder.itemView.findViewById(R.id.previous_view);
+////            previous.setOnClickListener(mOnClickListener);
+//            previous.setClickable(false);
+//
+//            return;
+//        }
         String url=null,desc=null;
         final T t=mResults.get(position);
         if(t instanceof Girl){
