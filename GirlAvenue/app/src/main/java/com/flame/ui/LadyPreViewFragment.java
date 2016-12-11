@@ -68,13 +68,14 @@ public class LadyPreViewFragment extends BaseFragment {
         recyclerView.addItemDecoration(new SpaceItemDecoration(3));
         mAdapter=new LadyPreViewAdapter(getContext(),getArguments().getString("url"));
         recyclerView.setAdapter(mAdapter);
+        mRefreshLayout.setProgressViewEndTarget(true,30);
         //bug no show progress
-        mRefreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mRefreshLayout.setRefreshing(true);
-            }
-        },300);
+//        mRefreshLayout.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mRefreshLayout.setRefreshing(true);
+//            }
+//        },300);
     }
     @Override
     public void showProgress() {
@@ -82,6 +83,7 @@ public class LadyPreViewFragment extends BaseFragment {
     }
     @Override
     public void hideProgress() {
+
         mRefreshLayout.setRefreshing(false);
     }
 

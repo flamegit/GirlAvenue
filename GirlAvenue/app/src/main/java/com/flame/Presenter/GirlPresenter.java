@@ -48,8 +48,10 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
     }
 
     @Override
-    public void onLoad(String item) {
+    public void onLoad(String item)
+    {
         mView.fillView(item);
+        mView.hideProgress();
     }
 
     @Override
