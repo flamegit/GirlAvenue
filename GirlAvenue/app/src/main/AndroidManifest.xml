@@ -23,6 +23,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".LadyViewActivity" />
+
+        <provider android:name="com.flame.database.GirlProvider"
+            android:authorities="com.flame.provider.girl"
+            android:exported="false">
+            <grant-uri-permission android:pathPattern=".*" />
+        </provider>
+
     </application>
 
 </manifest>
