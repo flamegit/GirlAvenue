@@ -11,7 +11,10 @@
         android:layout_height="match_parent"
         />
     <RelativeLayout
-        android:padding="5dp"
+        android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
         android:background="@color/bottomBlack"
         android:id="@+id/bottom_action_view"
         android:layout_alignParentBottom="true"
@@ -20,13 +23,13 @@
 
     <TextView
         android:id="@+id/index_view"
-        android:textSize="25sp"
+        android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1/10"/>
 
         <TextView
-            android:textSize="25sp"
+            android:textSize="15sp"
             android:id="@+id/save_view"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"

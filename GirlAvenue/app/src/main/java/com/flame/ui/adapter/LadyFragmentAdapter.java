@@ -13,8 +13,8 @@ import com.flame.ui.GirlListFragment;
  */
 public class LadyFragmentAdapter extends FragmentPagerAdapter {
 
-    String[][] titles={{"最新","最热","推荐"},{}};
-    String[][] paths={{"","/hot","/best"},{}};
+    String[][] titles={{"最新","最热","推荐"},{"性感妹子", "日本妹子", "台湾妹子", "清纯妹子"}};
+    String[][] paths={{"","hot/","best/"},{"xinggan/","japan/","taiwan/","mm/"}};
 
     int type;
 

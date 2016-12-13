@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -44,19 +45,21 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        initView();
+        initView(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        initView(intent);
+        Log.d("ff","onnewintent");
     }
 
-    private void initView(){
-        int type=getIntent().getIntExtra("type",0);
+    private void initView(Intent intent){
+        int type=intent.getIntExtra("type",0);
         TabLayout tabLayout=(TabLayout)findViewById(R.id.tab_layout);
         ViewPager viewPager=(ViewPager)findViewById(R.id.fragment_view);
-        PagerAdapter adapter=new LadyFragmentAdapter(getSupportFragmentManager(),0);
+        PagerAdapter adapter=new LadyFragmentAdapter(getSupportFragmentManager(),type);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -91,6 +94,13 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void changeType(int type){
+        Intent intent=new Intent("com.flame.changeType");
+        intent.putExtra("type",type);
+        startActivity(intent);
+    }
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -98,8 +108,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            changeType(0);
         } else if (id == R.id.nav_gallery) {
+            changeType(1);
 
         } else if (id == R.id.nav_slideshow) {
 

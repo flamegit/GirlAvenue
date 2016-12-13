@@ -94,9 +94,11 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
             photoView= (PhotoView) mCacheView.remove(0);
         }else {
             photoView=new PhotoView(container.getContext());
+            //TODO　bug
             photoView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             photoView.setOnViewTapListener(mListener);
         }
+
         Picasso.with(container.getContext())
                 .load(mResults.get(position))
                 .placeholder(new ColorDrawable(Color.GRAY))
