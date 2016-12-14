@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.flame.database.GirlDAO;
 import com.flame.model.Girl;
 import com.flame.model.Lady;
 import com.flame.ui.LadyViewActivity;
@@ -127,6 +128,14 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
                     mContext.startActivity(intent);
                 }
             });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    GirlDAO.getInstance(mContext).insetr(lady);
+                    return true;
+                }
+            });
+
         }
 
         Picasso picasso= Picasso.with(mContext);

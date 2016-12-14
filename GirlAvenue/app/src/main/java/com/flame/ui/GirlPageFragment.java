@@ -1,9 +1,11 @@
 package com.flame.ui;
 
 
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -84,25 +86,21 @@ public class GirlPageFragment extends BaseFragment {
             }
             @Override
             protected Void doInBackground(Void... params) {
+                boolean isSaved=true;
                 File path=Environment.getExternalStoragePublicDirectory("GirlAvenue");
                 if(!path.exists()){
                     path.mkdir();
                 }
                 String fileName=createFileName();
                 File file=new File(path,fileName);
+                OutputStream outputStream=null;
                 try {
-                    if(!file.exists()){
-                        file.createNewFile();
-                    }
-                    else {
+                    if(file.exists()){
                         Snackbar.make(getView(),"Image already saved",Snackbar.LENGTH_SHORT).show();
                         return null;
                     }
-                    OutputStream outputStream=new FileOutputStream(file);
-                    boolean isSaved;
-                    if(bitmap==null){
-                        isSaved=false;
-                    }else {
+                    outputStream=new FileOutputStream(file);
+                    if(bitmap!=null){
                         isSaved=bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
                     }
                     if(isSaved){
@@ -110,22 +108,37 @@ public class GirlPageFragment extends BaseFragment {
                     }else {
                         Snackbar.make(getView(),"Image saved failed",Snackbar.LENGTH_SHORT).show();
                     }
-                } catch (FileNotFoundException e) {
+                } catch (IOException e){
                     e.printStackTrace();
-                }catch (IOException e){
-                    e.printStackTrace();
+                }finally {
+                    try {
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 return null;
             }
         }.execute();
     }
 
-
+    private void share(Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("image/jpeg");
+        getContext().startActivity(Intent.createChooser(intent, "Share"));
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         if(item.getItemId()==R.id.action_save){
             saveLadyImage();
+        }
+        if(item.getItemId()==R.id.action_share){
+            share(Uri.parse(mUrl));
         }
         return true;
     }

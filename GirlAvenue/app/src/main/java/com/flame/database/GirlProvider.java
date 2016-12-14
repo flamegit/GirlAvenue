@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 public class GirlProvider extends ContentProvider {
 
+    private static final String TAG= "GirlProvider";
     private static final String DATABASE_NAME = "girl.db";
     private DatabaseHelper mOpenHelper;
     private static final UriMatcher sUriMatcher;
@@ -262,7 +264,7 @@ public class GirlProvider extends ContentProvider {
     static class DatabaseHelper extends SQLiteOpenHelper {
 
         DatabaseHelper(Context context){
-            super(context,DATABASE_NAME,null,0);
+            super(context,DATABASE_NAME,null,2);
 
         }
 
@@ -270,6 +272,7 @@ public class GirlProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + GirlData.GirlInfo.TABLE_NAME + " ("
                     + GirlData.GirlInfo._ID + " INTEGER PRIMARY KEY,"
+                    + GirlData.GirlInfo.COLUMN__DES + " TEXT,"
                     + GirlData.GirlInfo.COLUMN_COVER_URL + " TEXT,"
                     + GirlData.GirlInfo.COLUMN_DETAIL_URL + " TEXT,"
                     + GirlData.GirlInfo.COLUMN_CREATE_DATE + " INTEGER"
@@ -278,6 +281,15 @@ public class GirlProvider extends ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            // Logs that the database is being upgraded
+            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+                    + newVersion + ", which will destroy all old data");
+
+            // Kills the table and existing data
+            db.execSQL("DROP TABLE IF EXISTS notes");
+
+            // Recreates the database with a new version
+            onCreate(db);
 
         }
     }
