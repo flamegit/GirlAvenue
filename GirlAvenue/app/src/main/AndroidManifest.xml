@@ -26,7 +26,8 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".LadyViewActivity" />
+        <activity android:name=".LadyViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <provider android:name="com.flame.database.GirlProvider"
             android:authorities="com.flame.provider.girl"

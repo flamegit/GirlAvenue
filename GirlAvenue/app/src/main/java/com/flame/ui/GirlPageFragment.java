@@ -1,16 +1,22 @@
 package com.flame.ui;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +25,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.ui.adapter.LadyPagerAdapter;
@@ -38,6 +45,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class GirlPageFragment extends BaseFragment {
 
+    private static final int REQUEST_PERMISSION_CODE=1;
     LadyPagerAdapter mAdapter;
     int mIndex;
     String mUrl;
@@ -48,6 +56,7 @@ public class GirlPageFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTheme(R.style.AppTheme_Dark);
         Bundle bundle=getArguments();
        // getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mUrl=bundle.getString("url");
@@ -141,6 +150,43 @@ public class GirlPageFragment extends BaseFragment {
             share(Uri.parse(mUrl));
         }
         return true;
+    }
+
+
+    private void saveLadyImageWrap(){
+        if(requestPermisson()){
+            saveLadyImage();
+        }
+    }
+
+
+    private  boolean  requestPermisson(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(getContext(),Manifest.permission.READ_EXTERNAL_STORAGE);
+            if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_PERMISSION_CODE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                   saveLadyImage();
+                } else {
+                    // Permission Denied
+                    Toast.makeText(getContext(), "CALL_PHONE Denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     @Override
