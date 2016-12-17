@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.flame.datasource.LocalGirlFetcher;
 import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.model.ShowDetailEvent;
 import com.flame.presenter.GirlPresenter;
@@ -26,11 +27,24 @@ public class LadyViewActivity extends AppCompatActivity {
         if(intent==null){
             return;
         }
+        Fragment fragment= getSupportFragmentManager().findFragmentById(android.R.id.content);
+        GirlListFragment listFragment;
+        if(intent.getAction()!=null && intent.getAction().equals("favorite")){
+            if(fragment!=null && fragment instanceof GirlListFragment) {
+                listFragment = (GirlListFragment) fragment;
+            }else {
+                listFragment=new GirlListFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(android.R.id.content, listFragment)
+                        .commit();
+            }
+            new GirlPresenter(listFragment,new LocalGirlFetcher(this));
+            return;
+        }
         String url=intent.getStringExtra("url");
         String desc=intent.getStringExtra("desc");
         Log.d("fxlts",url);
         LadyPreViewFragment ladyPreViewFragment;
-        Fragment fragment= getSupportFragmentManager().findFragmentById(android.R.id.content);
         if(fragment!=null && fragment instanceof LadyPreViewFragment){
             ladyPreViewFragment=(LadyPreViewFragment)fragment;
         }else {

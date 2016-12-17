@@ -9,6 +9,7 @@ public class Lady {
    public String mDes;
    public String mThumbUrl;
    public String mUrl;
+   public boolean isFavorite;
    public List<String> mList;
 
    @Override

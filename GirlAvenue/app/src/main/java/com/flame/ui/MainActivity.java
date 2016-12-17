@@ -113,6 +113,9 @@ public class MainActivity extends AppCompatActivity
             changeType(1);
 
         } else if (id == R.id.nav_slideshow) {
+            Intent intent=new Intent(this,LadyViewActivity.class);
+            intent.setAction("favorite");
+            startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
 

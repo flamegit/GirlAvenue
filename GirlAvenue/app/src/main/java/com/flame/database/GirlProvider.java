@@ -33,7 +33,7 @@ public class GirlProvider extends ContentProvider {
     private static final int GIRL_ID= 2;
     private static final String[] GIRL_PROJECTION = new String[] {
             GirlData.GirlInfo._ID,             // Projection position 0, the note's id
-            GirlData.GirlInfo.COLUMN__DES,  // Projection position 1, the note's content
+            GirlData.GirlInfo.COLUMN_DES,  // Projection position 1, the note's content
             GirlData.GirlInfo.COLUMN_COVER_URL,// Projection position 2, the note's title
             GirlData.GirlInfo.COLUMN_DETAIL_URL
     };
@@ -62,9 +62,10 @@ public class GirlProvider extends ContentProvider {
         // Maps the string "_ID" to the column name "_ID"
         sProjectionMap.put(GirlData.GirlInfo._ID,  GirlData.GirlInfo._ID);
         // Maps "title" to "title"
-        sProjectionMap.put(GirlData.GirlInfo.COLUMN__DES, GirlData.GirlInfo.COLUMN__DES);
+        sProjectionMap.put(GirlData.GirlInfo.COLUMN_DES, GirlData.GirlInfo.COLUMN_DES);
         // Maps "note" to "note"
         sProjectionMap.put( GirlData.GirlInfo.COLUMN_COVER_URL,  GirlData.GirlInfo.COLUMN_COVER_URL);
+        sProjectionMap.put( GirlData.GirlInfo.COLUMN_DETAIL_URL,  GirlData.GirlInfo.COLUMN_DETAIL_URL);
     }
 
     @Override
@@ -272,7 +273,7 @@ public class GirlProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + GirlData.GirlInfo.TABLE_NAME + " ("
                     + GirlData.GirlInfo._ID + " INTEGER PRIMARY KEY,"
-                    + GirlData.GirlInfo.COLUMN__DES + " TEXT,"
+                    + GirlData.GirlInfo.COLUMN_DES + " TEXT,"
                     + GirlData.GirlInfo.COLUMN_COVER_URL + " TEXT,"
                     + GirlData.GirlInfo.COLUMN_DETAIL_URL + " TEXT,"
                     + GirlData.GirlInfo.COLUMN_CREATE_DATE + " INTEGER"

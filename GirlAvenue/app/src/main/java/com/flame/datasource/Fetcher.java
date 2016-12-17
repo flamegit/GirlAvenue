@@ -1,11 +1,13 @@
 package com.flame.datasource;
 
+import android.content.Context;
+
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/10/9.
  */
-public abstract class Fetcher {
+public  class Fetcher {
 
     public interface Callback{
         void onLoad(String item);
@@ -13,7 +15,12 @@ public abstract class Fetcher {
         void onError();
     }
 
-    public abstract void  loadData(String url,Callback callback);
+    public  void  loadData(String url,Callback callback){
+
+    }
+    public  void  loadData(Context context, Callback callback){
+
+    }
 
     public  void  loadPagerData(String url,Callback callback){
     }

@@ -37,7 +37,7 @@ public class GirlDAO {
 
     private static final String[] GIRL_PROJECTION = new String[] {
             GirlData.GirlInfo._ID,             // Projection position 0, the note's id
-            GirlData.GirlInfo.COLUMN__DES,  // Projection position 1, the note's content
+            GirlData.GirlInfo.COLUMN_DES,  // Projection position 1, the note's content
             GirlData.GirlInfo.COLUMN_COVER_URL,// Projection position 2, the note's title
             GirlData.GirlInfo.COLUMN_DETAIL_URL
     };
@@ -46,16 +46,16 @@ public class GirlDAO {
     private static final int GIRL_DETAIL_URL_INDEX = 2;
 
 
-    public void insetr(Lady lady){
+    public void insert(Lady lady){
         ContentValues values=new ContentValues();
-        values.put(GirlData.GirlInfo.COLUMN__DES,lady.mDes);
+        values.put(GirlData.GirlInfo.COLUMN_DES,lady.mDes);
         values.put(GirlData.GirlInfo.COLUMN_COVER_URL,lady.mThumbUrl);
         values.put(GirlData.GirlInfo.COLUMN_DETAIL_URL,lady.mUrl);
         mContext.getContentResolver().insert(GirlData.GirlInfo.CONTENT_URI,values);
     }
 
     public void delete(Lady lady){
-
+        mContext.getContentResolver().delete(GirlData.GirlInfo.CONTENT_URI,GirlData.GirlInfo.COLUMN_COVER_URL+"=?",new String[]{lady.mThumbUrl});
     }
 
     public List<Lady> query(){

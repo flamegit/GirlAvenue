@@ -128,13 +128,24 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
                     mContext.startActivity(intent);
                 }
             });
+            holder.favoriteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(lady.isFavorite){
+
+                    }else {
+
+                    }
+                }
+            });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    GirlDAO.getInstance(mContext).insetr(lady);
+                    GirlDAO.getInstance(mContext).insert(lady);
                     return true;
                 }
             });
+
 
         }
 
@@ -150,10 +161,12 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
      static class ViewHolder extends RecyclerView.ViewHolder{
          public View imageView;
          public TextView textView;
+         public View favoriteView;
         ViewHolder(View view){
             super(view);
             imageView=view.findViewById(R.id.image);
             textView=(TextView)view.findViewById(R.id.des_view);
+            favoriteView=view.findViewById(R.id.favorite_view);
       }
     }
 }

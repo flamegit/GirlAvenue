@@ -51,7 +51,7 @@ public final class GirlData {
          * Column name of the note content
          * <P>Type: TEXT</P>
          */
-        public static final String COLUMN__DES = "des";
+        public static final String COLUMN_DES = "des";
 
         /**
          * Column name for the creation timestamp
