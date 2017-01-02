@@ -1,8 +1,15 @@
 package com.flame.presenter;
 
+import android.database.ContentObserver;
+
+import com.flame.database.GirlData;
 import com.flame.datasource.Fetcher;
+import com.flame.datasource.RemoteLadyFetcher;
 
 import java.util.List;
+
+import static com.flame.utils.Constants.ENDURL;
+import static com.flame.utils.Constants.PATH;
 
 /**
  * Created by Administrator on 2016/10/9.
@@ -13,20 +20,19 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
     volatile boolean isLoading;
     Fetcher mFetcher;
     private int mPage;
+    private String mUrl;
 
-    private static final String ENDURL="http://www.mzitu.com/";
-    private String path="page/";
-    private String baseUrl;
-
+    public GirlPresenter(GirlContract.View view,String url){
+        mView=view;
+        mFetcher= RemoteLadyFetcher.getInstance(mView.getViewContext());
+        mPage=1;
+        mUrl=url;
+    }
     public GirlPresenter(GirlContract.View view,Fetcher fetcher){
         mView=view;
         mFetcher=fetcher;
-        mView.setPresenter(this);
         mPage=1;
-        baseUrl=ENDURL;
-    }
-    public void  setBaseUrl(String url){
-        baseUrl=ENDURL+url;
+        mUrl=ENDURL;
     }
 
     @Override
@@ -42,9 +48,9 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
 
     private String getCurrentPageUrl(){
         if(mPage==1){
-            return baseUrl;
+            return mUrl;
         }
-        return baseUrl+path+mPage;
+        return mUrl+PATH+mPage;
     }
 
     @Override
@@ -69,19 +75,16 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         isLoading=true;
         mFetcher.loadData(getCurrentPageUrl(),this);
     }
-
     @Override
     public void getLadyImages(String url) {
         mView.showProgress();
         mFetcher.loadPagerData(url,this);
     }
-
     @Override
     public void getNext(){
         mPage++;
         getGirlList();
     }
-
     @Override
     public void getPrevious(){
         mPage--;
@@ -91,7 +94,6 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
     public void cancel() {
         mFetcher.cancel();
     }
-
     @Override
     public void start() {
         getGirlList();

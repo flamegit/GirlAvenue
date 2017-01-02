@@ -43,7 +43,7 @@ public class GirlDAO {
     };
     private static final int GIRL_DES_INDEX = 1;
     private static final int GIRL_COVER_URL_INDEX = 2;
-    private static final int GIRL_DETAIL_URL_INDEX = 2;
+    private static final int GIRL_DETAIL_URL_INDEX = 3;
 
 
     public void insert(Lady lady){
@@ -54,8 +54,12 @@ public class GirlDAO {
         mContext.getContentResolver().insert(GirlData.GirlInfo.CONTENT_URI,values);
     }
 
-    public void delete(Lady lady){
-        mContext.getContentResolver().delete(GirlData.GirlInfo.CONTENT_URI,GirlData.GirlInfo.COLUMN_COVER_URL+"=?",new String[]{lady.mThumbUrl});
+    public boolean delete(Lady lady){
+        int count =mContext.getContentResolver().delete(GirlData.GirlInfo.CONTENT_URI,GirlData.GirlInfo.COLUMN_COVER_URL+"=?",new String[]{lady.mThumbUrl});
+        if(count>0){
+            return true;
+        }
+        return false;
     }
 
     public List<Lady> query(){
@@ -69,5 +73,13 @@ public class GirlDAO {
             list.add(tmp);
         }
         return list;
+    }
+
+    public boolean query(Lady lady){
+        Cursor c= mContext.getContentResolver().query(GirlData.GirlInfo.CONTENT_URI,GIRL_PROJECTION,GirlData.GirlInfo.COLUMN_DETAIL_URL+"=?",new String[]{lady.mUrl},null);
+        if (c.moveToNext()){
+           return true;
+        }
+        return false;
     }
 }

@@ -6,5 +6,11 @@ package com.flame.utils;
 
 public class Constants {
 
+    public static final String ENDURL="http://www.mzitu.com/";
+    public static final String PATH="page/";
+
+    public static final String URL="url";
+    public static final String DEC="dec";
+
 
 }

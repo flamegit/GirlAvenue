@@ -1,5 +1,6 @@
 package com.flame.ui;
 
+import android.database.ContentObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,8 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.flame.database.GirlData;
+import com.flame.datasource.LocalGirlFetcher;
+import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.model.Lady;
+import com.flame.presenter.GirlPresenter;
 import com.flame.ui.adapter.GirlListAdapter;
+import com.flame.utils.Constants;
+
 import java.util.List;
 
 /**
@@ -23,14 +30,13 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
 
     GirlListAdapter mAdapter;
     RecyclerView mRecyclerView;
-
     TextView mPreviousView;
     public  GirlListFragment(){
     }
-    public static GirlListFragment Instance(String url){
-        GirlListFragment fragment=new GirlListFragment();
+    public static GirlListFragment Instance(String baseUrl){
         Bundle bundle=new Bundle();
-        bundle.putString("url",url);
+        bundle.putString(Constants.URL,baseUrl);
+        GirlListFragment fragment=new GirlListFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -42,26 +48,21 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
     }
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mAdapter=new GirlListAdapter<Lady>(getContext(),mPresenter.getPage());
-        mRecyclerView.setAdapter(mAdapter);
-        mPresenter.start();
-        Log.d("ListFragment","onload");
-    }
 
     @Override
     void initView(View view) {
+        if(getActivity().getIntent().getAction().equals("favorite")){
+            mPresenter=new GirlPresenter(this, new LocalGirlFetcher(getContext()));
+        }else {
+            mPresenter=new GirlPresenter(this,getArguments().getString(Constants.URL));
+        }
         mRecyclerView=(RecyclerView)view.findViewById(R.id.view_list);
         final View bottomView=view.findViewById(R.id.bottom_nav_view);
         View nextView=bottomView.findViewById(R.id.next_view);
         mPreviousView=(TextView)bottomView.findViewById(R.id.previous_view);
         mPreviousView.setClickable(false);
-
         mPreviousView.setOnClickListener(this);
         nextView.setOnClickListener(this);
-
         StaggeredGridLayoutManager layoutManager=new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -72,17 +73,24 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
                     bottomView.setVisibility(View.VISIBLE);
                 }else if(Math.abs(dy)>10){
                     bottomView.setVisibility(View.GONE);
-                }
+                }mPresenter.getGirlList();
             }
         });
+
+//        getContext().getContentResolver().registerContentObserver(GirlData.GirlInfo.CONTENT_URI,
+//                false,new ContentObserver(null){
+//                    @Override
+//                    public void onChange(boolean selfChange) {
+//                        super.onChange(selfChange);
+//                        mPresenter.getGirlList();
+//                    }
+//                });
+
         mRecyclerView.setHasFixedSize(true);
-        //bug no show progress
-//        mRefreshLayout.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                mRefreshLayout.setRefreshing(true);
-//            }
-//        });
+        mAdapter=new GirlListAdapter<Lady>(getContext(),mPresenter.getPage());
+        mRecyclerView.setAdapter(mAdapter);
+        mPresenter.getGirlList();
+        Log.d("ListFragment","onCreateView");
     }
     @Override
     public void showProgress() {

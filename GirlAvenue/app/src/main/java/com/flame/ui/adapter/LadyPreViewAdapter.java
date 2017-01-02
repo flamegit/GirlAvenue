@@ -1,6 +1,7 @@
 package com.flame.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,7 +26,6 @@ public class LadyPreViewAdapter extends RecyclerView.Adapter<LadyPreViewAdapter.
     List<String> mResults;
     Context mContext;
     String mUrl;
-
 
     public LadyPreViewAdapter(Context context,String url){
         mContext=context;
@@ -66,6 +66,8 @@ public class LadyPreViewAdapter extends RecyclerView.Adapter<LadyPreViewAdapter.
         picasso.load(mResults.get(position))
                 .noFade() //load animation
                 .placeholder(new ColorDrawable(Color.GRAY))
+                .config(Bitmap.Config.RGB_565)
+                .fit()
                 .into((ImageView)holder.itemView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

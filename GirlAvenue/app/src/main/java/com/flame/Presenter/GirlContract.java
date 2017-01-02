@@ -1,5 +1,7 @@
 package com.flame.presenter;
 
+import android.content.Context;
+
 import java.util.List;
 
 /**
@@ -13,6 +15,7 @@ public interface GirlContract {
         void hideProgress();
         void fillView(List results);
         void fillView(String item);
+        Context getViewContext();
 
     }
     interface Presenter{

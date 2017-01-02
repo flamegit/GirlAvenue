@@ -1,6 +1,7 @@
 package com.flame.ui;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,24 +29,19 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
-
     @Override
     public void setPresenter(GirlContract.Presenter presenter) {
         mPresenter=presenter;
     }
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(getLayout(),container,false);
         initView(view);
         return view;
     }
-
     @Override
     public void fillView(String item){}
-
     @Override
     public void fillView(List items){}
-
     abstract void initView(View view);
     abstract int getLayout();
 
@@ -63,5 +59,8 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
         return true;
     }
 
-
+    @Override
+    public Context getViewContext() {
+        return getContext();
+    }
 }

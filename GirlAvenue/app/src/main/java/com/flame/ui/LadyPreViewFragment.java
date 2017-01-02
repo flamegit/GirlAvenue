@@ -8,8 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.flame.datasource.RemoteLadyFetcher;
+import com.flame.presenter.GirlPresenter;
 import com.flame.ui.adapter.LadyPreViewAdapter;
 import com.flame.ui.adapter.SpaceItemDecoration;
+import com.flame.utils.Constants;
 
 import java.util.List;
 
@@ -19,12 +22,10 @@ import java.util.List;
  *
  */
 public class LadyPreViewFragment extends BaseFragment {
-
     LadyPreViewAdapter mAdapter;
     SwipeRefreshLayout mRefreshLayout;
+    public LadyPreViewFragment(){}
 
-    public LadyPreViewFragment(){
-    }
     @Override
     int getLayout() {
         return R.layout.girl_preview;
@@ -33,8 +34,8 @@ public class LadyPreViewFragment extends BaseFragment {
     public static LadyPreViewFragment Instance(String url,String desc) {
         LadyPreViewFragment fragment = new LadyPreViewFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("url", url);
-        bundle.putString("desc", desc);
+        bundle.putString(Constants.URL, url);
+        bundle.putString(Constants.DEC, desc);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -42,24 +43,13 @@ public class LadyPreViewFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getActivity().setTitle(getArguments().getString("desc"));
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        String arg=getArguments().getString("url");
-        mPresenter.getLadyImages(arg);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        getActivity().setTitle(getArguments().getString(Constants.DEC));
     }
 
     @Override
     void initView(View view) {
+        ((LadyViewActivity)getActivity()).showToolbar(true);
+        mPresenter=new GirlPresenter(this, RemoteLadyFetcher.getInstance(getContext()));
         RecyclerView recyclerView=(RecyclerView)view.findViewById(R.id.view_list);
         mRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
         GridLayoutManager layoutManager=new GridLayoutManager(getContext(),3);
@@ -69,13 +59,7 @@ public class LadyPreViewFragment extends BaseFragment {
         mAdapter=new LadyPreViewAdapter(getContext(),getArguments().getString("url"));
         recyclerView.setAdapter(mAdapter);
         mRefreshLayout.setProgressViewEndTarget(true,30);
-        //bug no show progress
-//        mRefreshLayout.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mRefreshLayout.setRefreshing(true);
-//            }
-//        },300);
+        mPresenter.getLadyImages(getArguments().getString("url"));
     }
     @Override
     public void showProgress() {
@@ -83,7 +67,6 @@ public class LadyPreViewFragment extends BaseFragment {
     }
     @Override
     public void hideProgress() {
-
         mRefreshLayout.setRefreshing(false);
     }
 

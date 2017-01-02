@@ -2,6 +2,7 @@ package com.flame.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flame.database.GirlDAO;
+import com.flame.database.GirlData;
 import com.flame.model.Girl;
 import com.flame.model.Lady;
 import com.flame.ui.LadyViewActivity;
@@ -90,7 +92,7 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if(getItemViewType(position)==FOOTER){
             StaggeredGridLayoutManager.LayoutParams layoutParams= (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
             layoutParams.setFullSpan(true);
@@ -128,25 +130,25 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
                     mContext.startActivity(intent);
                 }
             });
+            if(lady.isFavorite){
+                holder.favoriteView.setImageResource(R.mipmap.favorite_press);
+            }
             holder.favoriteView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(lady.isFavorite){
-
+                        if(! GirlDAO.getInstance(mContext).delete(lady)) {
+                            return;
+                        }
+                        lady.isFavorite=false;
+                        holder.favoriteView.setImageResource(R.mipmap.favorite);
                     }else {
-
+                        GirlDAO.getInstance(mContext).insert(lady);
+                        lady.isFavorite=true;
+                        holder.favoriteView.setImageResource(R.mipmap.favorite_press);
                     }
                 }
             });
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    GirlDAO.getInstance(mContext).insert(lady);
-                    return true;
-                }
-            });
-
-
         }
 
         Picasso picasso= Picasso.with(mContext);
@@ -161,12 +163,12 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
      static class ViewHolder extends RecyclerView.ViewHolder{
          public View imageView;
          public TextView textView;
-         public View favoriteView;
+         public ImageView favoriteView;
         ViewHolder(View view){
             super(view);
             imageView=view.findViewById(R.id.image);
             textView=(TextView)view.findViewById(R.id.des_view);
-            favoriteView=view.findViewById(R.id.favorite_view);
+            favoriteView=(ImageView)view.findViewById(R.id.favorite_view);
       }
     }
 }

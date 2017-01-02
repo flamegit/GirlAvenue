@@ -1,8 +1,10 @@
 package com.flame.datasource;
 
 import android.content.Context;
+import android.database.ContentObserver;
 
 import com.flame.database.GirlDAO;
+import com.flame.database.GirlData;
 import com.flame.model.Lady;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -23,6 +26,7 @@ public class LocalGirlFetcher extends Fetcher {
     Context mContext;
     public LocalGirlFetcher(Context context){
         mContext=context;
+
     }
 
     @Override
@@ -37,6 +41,14 @@ public class LocalGirlFetcher extends Fetcher {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Action1<List<Lady>>() {
+                    @Override
+                    public void call(List<Lady> ladies) {
+                        for(Lady lady:ladies){
+                            lady.isFavorite=true;
+                        }
+                    }
+                })
                 .subscribe(new Observer<List<Lady>>() {
                     @Override
                     public void onCompleted() {

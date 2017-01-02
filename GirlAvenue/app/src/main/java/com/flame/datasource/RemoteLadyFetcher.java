@@ -1,5 +1,9 @@
 package com.flame.datasource;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.flame.database.GirlDAO;
 import com.flame.model.Lady;
 import com.flame.utils.CacheManager;
 import java.util.ArrayList;
@@ -9,6 +13,7 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -21,23 +26,23 @@ public class RemoteLadyFetcher extends Fetcher {
     Subscription mCover;
     Subscription mList;
     CacheManager mCaches;
+    Context mContext;
 
-    public static Fetcher getInstance(){
+    public static Fetcher getInstance(Context context){
         if(mInstance==null) {
             synchronized (RemoteGirlFetcher.class){
                 if(mInstance==null){
-                   mInstance=new RemoteLadyFetcher();
+                   mInstance=new RemoteLadyFetcher(context);
                 }
             }
         }
         return mInstance;
     }
 
-    private RemoteLadyFetcher(){
+    private RemoteLadyFetcher(Context context){
         mCaches=new CacheManager();
-
+        mContext=context;
     }
-
     public void setCallback(Callback callback){
         mCallback=callback;
     }
@@ -63,6 +68,18 @@ public class RemoteLadyFetcher extends Fetcher {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Action1<List<Lady>>() {
+                    @Override
+                    public void call(List<Lady> ladies) {
+                        GirlDAO girlDao=GirlDAO.getInstance(mContext);
+                        List<Lady> favLadies=girlDao.query();
+                        for(Lady lady:ladies){
+                            if(favLadies.contains(lady)){
+                                lady.isFavorite=true;
+                            }
+                        }
+                    }
+                })
                 .subscribe(new Observer<List<Lady>>() {
                     @Override
                     public void onCompleted() {
@@ -97,7 +114,6 @@ public class RemoteLadyFetcher extends Fetcher {
         if(loadFromCache(url,callback)){
             return;
         }
-
         final Lady lady=getLady(url);
         // avoid duplicate
         if(lady.mList!=null && lady.mList.size()>0){
@@ -122,6 +138,7 @@ public class RemoteLadyFetcher extends Fetcher {
                     }
                     @Override
                     public void onError(Throwable e) {
+                        Log.d("fxlts",e.toString());
                     }
                     @Override
                     public void onNext(String src) {
