@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -107,22 +107,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_home) {
             changeType(0);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_type) {
             changeType(1);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_tag) {
+
+        } else if (id == R.id.nav_favorite) {
             Intent intent=new Intent(this,LadyViewActivity.class);
             intent.setAction("favorite");
             startActivity(intent);
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

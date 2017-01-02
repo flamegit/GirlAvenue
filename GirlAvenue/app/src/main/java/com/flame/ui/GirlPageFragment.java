@@ -39,6 +39,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -58,11 +59,14 @@ public class GirlPageFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle bundle = getArguments();
         mUrl = bundle.getString(Constants.URL);
         mIndex = bundle.getInt("index", 0);
        // getActivity().getWindow().setFlags(Window.);
     }
+
+
 
     public static GirlPageFragment Instance(String url, int index) {
         GirlPageFragment fragment = new GirlPageFragment();
@@ -72,6 +76,8 @@ public class GirlPageFragment extends BaseFragment {
         fragment.setArguments(bundle);
         return fragment;
     }
+
+
 
     @Override
     public void showProgress() {}
@@ -148,6 +154,11 @@ public class GirlPageFragment extends BaseFragment {
     }
 
     @Override
+    public int getOptionMenu(){
+        return R.menu.lady_view_menu;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_save) {
@@ -218,21 +229,6 @@ public class GirlPageFragment extends BaseFragment {
                 saveLadyImageWrap();
             }
         });
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                int p = position + 1;
-                textView.setText(p + "/" + mAdapter.getCount());
-                mIndex = position;
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
         mAdapter = new LadyPagerAdapter(mUrl);
         mAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -254,8 +250,22 @@ public class GirlPageFragment extends BaseFragment {
                 }
             }
         });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+            @Override
+            public void onPageSelected(int position) {
+                int p = position + 1;
+                textView.setText(p + "/" + mAdapter.getCount());
+                mIndex = position;
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mIndex);
-        viewPager.getFocusedChild();
+        //viewPager.getFocusedChild();
     }
 }

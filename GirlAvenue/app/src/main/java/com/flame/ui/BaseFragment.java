@@ -29,6 +29,7 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
     @Override
     public void setPresenter(GirlContract.Presenter presenter) {
         mPresenter=presenter;
@@ -45,9 +46,13 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
     abstract void initView(View view);
     abstract int getLayout();
 
+    public int getOptionMenu(){
+        return R.menu.menu_main;
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.lady_view_menu, menu);
+        inflater.inflate(getOptionMenu(), menu);
         return;
     }
 
