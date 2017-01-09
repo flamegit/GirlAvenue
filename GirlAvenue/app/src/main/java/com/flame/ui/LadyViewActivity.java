@@ -3,25 +3,18 @@ package com.flame.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-
-import com.flame.datasource.LocalGirlFetcher;
-import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.model.ShowDetailEvent;
-import com.flame.presenter.GirlPresenter;
 import com.flame.utils.RxBus;
-
 import rx.Subscription;
 import rx.functions.Action1;
-
 public class LadyViewActivity extends AppCompatActivity {
     Subscription mSubscription;
     Toolbar mToolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +29,6 @@ public class LadyViewActivity extends AppCompatActivity {
                 showPageFragment(event.url, event.index);
             }
         });
-
         Intent intent = getIntent();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content);
         GirlListFragment listFragment;
@@ -74,6 +66,7 @@ public class LadyViewActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, fragment)
                 .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commitAllowingStateLoss();
     }
 

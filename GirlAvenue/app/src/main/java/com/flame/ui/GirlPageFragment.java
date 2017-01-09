@@ -46,7 +46,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * Created by Administrator on 2016/10/7.
  */
 public class GirlPageFragment extends BaseFragment {
-
     private static final int REQUEST_PERMISSION_CODE = 1;
     LadyPagerAdapter mAdapter;
     int mIndex;
@@ -59,14 +58,10 @@ public class GirlPageFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle bundle = getArguments();
         mUrl = bundle.getString(Constants.URL);
         mIndex = bundle.getInt("index", 0);
-       // getActivity().getWindow().setFlags(Window.);
     }
-
-
 
     public static GirlPageFragment Instance(String url, int index) {
         GirlPageFragment fragment = new GirlPageFragment();
@@ -149,7 +144,7 @@ public class GirlPageFragment extends BaseFragment {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.setType("image/jpeg");
+        intent.setType("image/*");
         getContext().startActivity(Intent.createChooser(intent, "Share"));
     }
 
@@ -198,7 +193,7 @@ public class GirlPageFragment extends BaseFragment {
                     saveLadyImage();
                 } else {
                     // Permission Denied
-                    Toast.makeText(getContext(), "CALL_PHONE Denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "READ_EXTERNAL_STORAGE  Denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -239,7 +234,6 @@ public class GirlPageFragment extends BaseFragment {
 
             }
         });
-
         mAdapter.setTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
@@ -266,6 +260,5 @@ public class GirlPageFragment extends BaseFragment {
         });
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mIndex);
-        //viewPager.getFocusedChild();
     }
 }

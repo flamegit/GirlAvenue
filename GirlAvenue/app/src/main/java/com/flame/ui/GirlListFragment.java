@@ -53,6 +53,14 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
     void initView(View view) {
         if(getActivity().getIntent().getAction().equals("favorite")){
             mPresenter=new GirlPresenter(this, new LocalGirlFetcher(getContext()));
+            getContext().getContentResolver().registerContentObserver(GirlData.GirlInfo.CONTENT_URI,
+                false,new ContentObserver(null){
+                    @Override
+                    public void onChange(boolean selfChange) {
+                        super.onChange(selfChange);
+                        mPresenter.getGirlList();
+                    }
+                });
         }else {
             mPresenter=new GirlPresenter(this,getArguments().getString(Constants.URL));
         }
@@ -73,25 +81,16 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
                     bottomView.setVisibility(View.VISIBLE);
                 }else if(Math.abs(dy)>10){
                     bottomView.setVisibility(View.GONE);
-                }mPresenter.getGirlList();
+                }
             }
         });
-
-//        getContext().getContentResolver().registerContentObserver(GirlData.GirlInfo.CONTENT_URI,
-//                false,new ContentObserver(null){
-//                    @Override
-//                    public void onChange(boolean selfChange) {
-//                        super.onChange(selfChange);
-//                        mPresenter.getGirlList();
-//                    }
-//                });
-
         mRecyclerView.setHasFixedSize(true);
         mAdapter=new GirlListAdapter<Lady>(getContext(),mPresenter.getPage());
         mRecyclerView.setAdapter(mAdapter);
         mPresenter.getGirlList();
         Log.d("ListFragment","onCreateView");
     }
+
     @Override
     public void showProgress() {
         mAdapter.showFooter();
@@ -108,7 +107,7 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-
+        mRecyclerView.scrollToPosition(0);
         if(v.getId()==R.id.next_view){
             mPresenter.getNext();
         }

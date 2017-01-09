@@ -59,6 +59,7 @@ public class LadyPreViewFragment extends BaseFragment {
         mAdapter=new LadyPreViewAdapter(getContext(),getArguments().getString("url"));
         recyclerView.setAdapter(mAdapter);
         mRefreshLayout.setProgressViewEndTarget(true,30);
+        mRefreshLayout.setEnabled(false);
         mPresenter.getLadyImages(getArguments().getString("url"));
     }
     @Override

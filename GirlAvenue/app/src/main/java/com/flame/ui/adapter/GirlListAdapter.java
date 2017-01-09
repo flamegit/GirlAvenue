@@ -124,15 +124,13 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //RxBus.getDefault().post(t);
                     Intent intent=new Intent(mContext, LadyViewActivity.class);
                     intent.putExtra("url",lady.mUrl).putExtra("desc",lady.mDes);
                     mContext.startActivity(intent);
                 }
             });
-            if(lady.isFavorite){
-                holder.favoriteView.setImageResource(R.mipmap.favorite_press);
-            }
+            int resId=lady.isFavorite? R.mipmap.favorite_press:R.mipmap.favorite;
+            holder.favoriteView.setImageResource(resId);
             holder.favoriteView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -150,7 +148,6 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
                 }
             });
         }
-
         Picasso picasso= Picasso.with(mContext);
         picasso.setLoggingEnabled(true);
         picasso.load(url)
