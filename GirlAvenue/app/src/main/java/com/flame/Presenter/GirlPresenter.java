@@ -24,7 +24,7 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
 
     public GirlPresenter(GirlContract.View view,String url){
         mView=view;
-        mFetcher= RemoteLadyFetcher.getInstance(mView.getViewContext());
+        mFetcher= new RemoteLadyFetcher(mView.getViewContext());
         mPage=1;
         mUrl=url;
     }

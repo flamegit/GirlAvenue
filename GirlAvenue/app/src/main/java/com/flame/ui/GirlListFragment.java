@@ -93,10 +93,12 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void showProgress() {
+        mAdapter.clearItems();
         mAdapter.showFooter();
     }
     @Override
     public void hideProgress() {
+        mRecyclerView.scrollToPosition(0);
         mAdapter.hideFooter();
     }
 
@@ -107,7 +109,7 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        mRecyclerView.scrollToPosition(0);
+
         if(v.getId()==R.id.next_view){
             mPresenter.getNext();
         }

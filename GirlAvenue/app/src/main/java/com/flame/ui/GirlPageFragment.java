@@ -1,10 +1,7 @@
 package com.flame.ui;
-
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -15,31 +12,21 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.flame.datasource.RemoteLadyFetcher;
+import com.flame.datasource.Fetcher;
 import com.flame.ui.adapter.LadyPagerAdapter;
+import com.flame.utils.CacheManager;
 import com.flame.utils.Constants;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
-
-import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -50,9 +37,11 @@ public class GirlPageFragment extends BaseFragment {
     LadyPagerAdapter mAdapter;
     int mIndex;
     String mUrl;
-    View mActionView;
+    CacheManager mCacheManager;
+    boolean isFullScreen=false;
 
     public GirlPageFragment() {
+        mCacheManager= CacheManager.getInstance();
     }
 
     @Override
@@ -60,20 +49,17 @@ public class GirlPageFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         mUrl = bundle.getString(Constants.URL);
-        mIndex = bundle.getInt("index", 0);
+        mIndex = bundle.getInt(Constants.INDEX, 0);
     }
 
     public static GirlPageFragment Instance(String url, int index) {
         GirlPageFragment fragment = new GirlPageFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.URL, url);
-        bundle.putInt("index", index);
+        bundle.putInt(Constants.INDEX, index);
         fragment.setArguments(bundle);
         return fragment;
     }
-
-
-
     @Override
     public void showProgress() {}
 
@@ -157,21 +143,23 @@ public class GirlPageFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_save) {
-            saveLadyImage();
+            saveLadyImageWrap();
         }
         if (item.getItemId() == R.id.action_share) {
-            share(Uri.parse(mUrl));
+            share(Uri.parse(getImageUrl(mUrl)));
         }
         return true;
     }
 
+    private String getImageUrl(String key){
+       return mCacheManager.getLady(key).mList.get(mIndex);
+    }
 
     private void saveLadyImageWrap() {
         if (requestPermission()) {
             saveLadyImage();
         }
     }
-
     private boolean requestPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -182,8 +170,6 @@ public class GirlPageFragment extends BaseFragment {
         }
         return true;
     }
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -215,32 +201,36 @@ public class GirlPageFragment extends BaseFragment {
     void initView(View view) {
        // ((LadyViewActivity)getActivity()).showToolbar(false);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
-        final TextView textView = (TextView) view.findViewById(R.id.index_view);
-        mActionView = view.findViewById(R.id.bottom_action_view);
-        View saveView = view.findViewById(R.id.save_view);
-        saveView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveLadyImageWrap();
-            }
-        });
-        mAdapter = new LadyPagerAdapter(mUrl);
-        mAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                int num = mAdapter.getCount();
-                textView.setText("1/" + num);
 
+        mAdapter = new LadyPagerAdapter(mUrl);
+        mCacheManager.setCallback(new Fetcher.Callback(){
+            @Override
+            public void onLoad(String item) {
+                int num = mAdapter.getCount();
+                LadyViewActivity activity=(LadyViewActivity)getActivity();
+                if(activity!=null){
+                    activity.changeTitle("1/" + num);
+                    mAdapter.notifyDataSetChanged();
+                }
             }
+            @Override
+            public void onLoad(List results) {}
+            @Override
+            public void onError() {}
         });
+
         mAdapter.setTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
-                if (mActionView.getAlpha() > 0) {
-                    mActionView.animate().alpha(0);
-                } else {
-                    mActionView.animate().alpha(1);
+                LadyViewActivity activity=(LadyViewActivity)getActivity();
+                if(activity!=null){
+                    if(isFullScreen){
+                        activity.showToolbar(false);
+                        isFullScreen=false;
+                    }else {
+                        activity.showToolbar(true);
+                        isFullScreen=true;
+                    }
                 }
             }
         });
@@ -251,7 +241,10 @@ public class GirlPageFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
                 int p = position + 1;
-                textView.setText(p + "/" + mAdapter.getCount());
+                LadyViewActivity activity=(LadyViewActivity)getActivity();
+                if(activity!=null){
+                    activity.changeTitle(p + "/" + mAdapter.getCount());
+                }
                 mIndex = position;
             }
             @Override
@@ -260,5 +253,12 @@ public class GirlPageFragment extends BaseFragment {
         });
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mIndex);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCacheManager.setCallback(null);
+
     }
 }

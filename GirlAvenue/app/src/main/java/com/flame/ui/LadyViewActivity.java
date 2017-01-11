@@ -13,6 +13,8 @@ import com.flame.utils.RxBus;
 import rx.Subscription;
 import rx.functions.Action1;
 public class LadyViewActivity extends AppCompatActivity {
+
+
     Subscription mSubscription;
     Toolbar mToolbar;
     @Override
@@ -52,13 +54,16 @@ public class LadyViewActivity extends AppCompatActivity {
         }
     }
 
-    public void showToolbar(boolean show){
-        if(show){
-            mToolbar.setVisibility(View.VISIBLE);
-        }else {
-           // mToolbar.setVisibility(View.GONE);
-            mToolbar.setBackgroundResource(android.R.color.black);
+    public void showToolbar(boolean show) {
+        if (show) {
+            mToolbar.animate().alpha(1);
+        } else {
+            mToolbar.animate().alpha(0);
         }
+    }
+
+    public void changeTitle(String title){
+        setTitle(title);
     }
 
     private void showPageFragment(String url, int index) {

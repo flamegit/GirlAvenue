@@ -6,8 +6,10 @@ import android.util.Log;
 import com.flame.database.GirlDAO;
 import com.flame.model.Lady;
 import com.flame.utils.CacheManager;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -21,39 +23,14 @@ import rx.schedulers.Schedulers;
  */
 
 public class RemoteLadyFetcher extends Fetcher {
-    private static volatile Fetcher mInstance;
-    Callback mCallback;
-    Subscription mCover;
-    Subscription mList;
-    CacheManager mCaches;
-    Context mContext;
+    private Subscription mCover;
+    private Subscription mList;
+    private CacheManager mCaches;
+    private Context mContext;
 
-    public static Fetcher getInstance(Context context){
-        if(mInstance==null) {
-            synchronized (RemoteGirlFetcher.class){
-                if(mInstance==null){
-                   mInstance=new RemoteLadyFetcher(context);
-                }
-            }
-        }
-        return mInstance;
-    }
-
-    private RemoteLadyFetcher(Context context){
-        mCaches=new CacheManager();
+    public RemoteLadyFetcher(Context context){
+        mCaches=CacheManager.getInstance();
         mContext=context;
-    }
-    public void setCallback(Callback callback){
-        mCallback=callback;
-    }
-
-    public Lady getLady(String url){
-        Lady lady=mCaches.get(url);
-        if(lady==null){
-            lady=new Lady();
-            mCaches.save(url,lady);
-        }
-        return lady;
     }
 
     @Override
@@ -86,6 +63,7 @@ public class RemoteLadyFetcher extends Fetcher {
                     }
                     @Override
                     public void onError(Throwable e) {
+                        Log.d("fxlts",e.toString());
                     }
                     @Override
                     public void onNext(List<Lady> ladies) {
@@ -96,25 +74,18 @@ public class RemoteLadyFetcher extends Fetcher {
     }
 
     public void cancel(){
-        mList.unsubscribe();
-    }
-
-    private boolean loadFromCache(String url,Callback callback){
-        if(mCaches.isCached(url)){
-            Lady lady=getLady(url);
-            callback.onLoad(lady.mList);
-            return  true;
+        if(mList!=null){
+            mList.unsubscribe();
         }
-        return false;
-    }
 
+    }
 
     @Override
     public void loadPagerData(final String url, final Callback callback) {
-        if(loadFromCache(url,callback)){
+        if(mCaches.loadFromCache(url,callback)){
             return;
         }
-        final Lady lady=getLady(url);
+        final Lady lady=mCaches.getLady(url);
         // avoid duplicate
         if(lady.mList!=null && lady.mList.size()>0){
             lady.mList.clear();
@@ -135,6 +106,7 @@ public class RemoteLadyFetcher extends Fetcher {
                     @Override
                     public void onCompleted() {
                         mCaches.loadComplete(url);
+                        mCaches.setCallback(null);
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -147,8 +119,9 @@ public class RemoteLadyFetcher extends Fetcher {
                             lady.mList=new ArrayList<String>();
                         }
                         lady.mList.add(src);
-                        if( mCallback!=null){
-                            mCallback.onLoad(src);
+
+                        if(mCaches.getCallback()!=null){
+                            mCaches.getCallback().onLoad(src);
                         }
                     }
                 });

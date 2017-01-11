@@ -1,14 +1,11 @@
 package com.flame.ui.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.flame.datasource.Fetcher;
-import com.flame.datasource.RemoteLadyFetcher;
+import com.flame.utils.CacheManager;
 import com.squareup.picasso.Picasso;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,29 +22,12 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
     List<String> mResults;
     List mCacheView;
     PhotoView mCurrItem;
-    Context mContext;
     PhotoViewAttacher.OnViewTapListener mListener;
 
 
-    public LadyPagerAdapter(Context context){
-        mContext=context;
-    }
+
     public LadyPagerAdapter(String url){
-        RemoteLadyFetcher fetcher=(RemoteLadyFetcher)RemoteLadyFetcher.getInstance(mContext);
-        mResults= fetcher.getLady(url).mList;
-        fetcher.setCallback(new Fetcher.Callback() {
-            @Override
-            public void onLoad(String item) {
-                notifyDataSetChanged();
-                Log.d("fxlts","callback");
-            }
-            @Override
-            public void onLoad(List results) {
-            }
-            @Override
-            public void onError() {
-            }
-        });
+        mResults= CacheManager.getInstance().getLady(url).mList;
     }
 
     public void setTapListener(PhotoViewAttacher.OnViewTapListener listener){
@@ -69,7 +49,6 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
         mResults.add(item);
         notifyDataSetChanged();
     }
-
 
     @Override
     public int getCount() {

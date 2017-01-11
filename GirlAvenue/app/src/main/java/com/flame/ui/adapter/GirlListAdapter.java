@@ -2,7 +2,6 @@ package com.flame.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flame.database.GirlDAO;
-import com.flame.database.GirlData;
 import com.flame.model.Girl;
 import com.flame.model.Lady;
 import com.flame.ui.LadyViewActivity;
@@ -31,7 +29,6 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
     List<T> mResults;
     Context mContext;
     boolean isShowFooter;
-    View.OnClickListener mOnClickListener;
     int mPage;
 
     private static final int FOOTER=1;
@@ -73,14 +70,19 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
         notifyDataSetChanged();
     }
 
+    public void clearItems(){
+        int count=mResults.size();
+        mResults.clear();
+        notifyItemRangeRemoved(0,count);
+    }
+
     public void addItems( List<T> items){
         Log.d("Girl",items.size()+"");
         if(mResults.size()>0){
             mResults.clear();
         }
         mResults.addAll(items);
-        //notifyItemRangeInserted(0,items.size());
-        notifyDataSetChanged();
+        notifyItemRangeInserted(0,items.size());
     }
 
     @Override
@@ -98,18 +100,6 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
             layoutParams.setFullSpan(true);
             return;
         }
-//        if(getItemViewType(position)==NAVIGATION){
-//            StaggeredGridLayoutManager.LayoutParams layoutParams= (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-//            layoutParams.setFullSpan(true);
-//            holder.itemView.setOnClickListener(mOnClickListener);
-////            View next= holder.itemView.findViewById(R.id.next_view);
-////            next.setOnClickListener(mOnClickListener);
-//            View previous=holder.itemView.findViewById(R.id.previous_view);
-////            previous.setOnClickListener(mOnClickListener);
-//            previous.setClickable(false);
-//
-//            return;
-//        }
         String url=null,desc=null;
         final T t=mResults.get(position);
         if(t instanceof Girl){
@@ -126,6 +116,9 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
                 public void onClick(View v) {
                     Intent intent=new Intent(mContext, LadyViewActivity.class);
                     intent.putExtra("url",lady.mUrl).putExtra("desc",lady.mDes);
+//                    ActivityOptionsCompat options = ActivityOptionsCompat
+//                            .makeScaleUpAnimation(view, view.getWidth() / 2, view.getHeight() / 2, 0, 0);
+//                    ActivityCompat.startActivity(mContext, intent, options.toBundle());
                     mContext.startActivity(intent);
                 }
             });

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.presenter.GirlPresenter;
 import com.flame.ui.adapter.LadyPreViewAdapter;
 import com.flame.ui.adapter.SpaceItemDecoration;
@@ -49,7 +48,7 @@ public class LadyPreViewFragment extends BaseFragment {
     @Override
     void initView(View view) {
         ((LadyViewActivity)getActivity()).showToolbar(true);
-        mPresenter=new GirlPresenter(this, RemoteLadyFetcher.getInstance(getContext()));
+        mPresenter=new GirlPresenter(this, "");
         RecyclerView recyclerView=(RecyclerView)view.findViewById(R.id.view_list);
         mRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
         GridLayoutManager layoutManager=new GridLayoutManager(getContext(),3);
@@ -58,8 +57,8 @@ public class LadyPreViewFragment extends BaseFragment {
         recyclerView.addItemDecoration(new SpaceItemDecoration(3));
         mAdapter=new LadyPreViewAdapter(getContext(),getArguments().getString("url"));
         recyclerView.setAdapter(mAdapter);
-        mRefreshLayout.setProgressViewEndTarget(true,30);
-        mRefreshLayout.setEnabled(false);
+        mRefreshLayout.setProgressViewOffset(true, 0, 50);
+        mRefreshLayout.setDistanceToTriggerSync(recyclerView.getHeight());
         mPresenter.getLadyImages(getArguments().getString("url"));
     }
     @Override
