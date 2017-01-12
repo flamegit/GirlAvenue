@@ -1,15 +1,12 @@
 package com.flame.presenter;
 
-import android.database.ContentObserver;
-
-import com.flame.database.GirlData;
 import com.flame.datasource.Fetcher;
 import com.flame.datasource.RemoteLadyFetcher;
 
 import java.util.List;
 
-import static com.flame.utils.Constants.ENDURL;
-import static com.flame.utils.Constants.PATH;
+import static com.flame.Constants.ENDURL;
+import static com.flame.Constants.PATH;
 
 /**
  * Created by Administrator on 2016/10/9.

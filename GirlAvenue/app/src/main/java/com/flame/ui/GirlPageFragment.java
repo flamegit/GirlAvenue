@@ -20,8 +20,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.flame.datasource.Fetcher;
 import com.flame.ui.adapter.LadyPagerAdapter;
-import com.flame.utils.CacheManager;
-import com.flame.utils.Constants;
+import com.flame.datasource.CacheManager;
+import com.flame.Constants;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -199,9 +199,8 @@ public class GirlPageFragment extends BaseFragment {
 
     @Override
     void initView(View view) {
-       // ((LadyViewActivity)getActivity()).showToolbar(false);
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
 
+        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mAdapter = new LadyPagerAdapter(mUrl);
         mCacheManager.setCallback(new Fetcher.Callback(){
             @Override

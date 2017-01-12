@@ -4,11 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.flame.datasource.RemoteLadyFetcher;
-import com.flame.presenter.GirlPresenter;
+import com.flame.Constants;
 import com.flame.ui.GirlListFragment;
 
-import static com.flame.utils.Constants.ENDURL;
+import static com.flame.Constants.ENDURL;
 
 /**
  * Created by Administrator on 2016/8/13.
@@ -33,7 +32,7 @@ public class LadyFragmentAdapter extends FragmentPagerAdapter {
     }
     @Override
     public Fragment getItem(int position) {
-        GirlListFragment fragment= GirlListFragment.Instance(ENDURL + paths[type][position]);
+        GirlListFragment fragment= GirlListFragment.Instance(ENDURL + paths[type][position], Constants.HOME);
         return fragment;
     }
 

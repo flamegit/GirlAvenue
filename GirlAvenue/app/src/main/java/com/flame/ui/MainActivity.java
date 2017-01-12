@@ -1,5 +1,6 @@
 package com.flame.ui;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import com.flame.Constants;
 import com.flame.ui.adapter.LadyFragmentAdapter;
 
 public class MainActivity extends AppCompatActivity
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initView(Intent intent){
-        int type=intent.getIntExtra("type",0);
+        int type=intent.getIntExtra(Constants.TYPE,Constants.HOME);
         TabLayout tabLayout=(TabLayout)findViewById(R.id.tab_layout);
         ViewPager viewPager=(ViewPager)findViewById(R.id.fragment_view);
         PagerAdapter adapter=new LadyFragmentAdapter(getSupportFragmentManager(),type);
@@ -76,18 +76,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -95,8 +90,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void changeType(int type){
-        Intent intent=new Intent("com.flame.changeType");
-        intent.putExtra("type",type);
+        Intent intent=new Intent(Constants.CHANGE_TYPE_ACTION);
+        intent.putExtra(Constants.TYPE,type);
         startActivity(intent);
     }
 
@@ -104,20 +99,16 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_home) {
-            changeType(0);
+            changeType(Constants.HOME);
         } else if (id == R.id.nav_type) {
-            changeType(1);
+            changeType(Constants.CATEGORY);
 
         } else if (id == R.id.nav_tag) {
 
         } else if (id == R.id.nav_favorite) {
-            Intent intent=new Intent(this,LadyViewActivity.class);
-            intent.setAction("favorite");
-            startActivity(intent);
+            LadyViewActivity.jumpToActivity(this,Constants.SHOW_FAVORITE_ACTION,null,null,0);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

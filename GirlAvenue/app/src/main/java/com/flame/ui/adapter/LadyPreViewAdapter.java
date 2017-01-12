@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.flame.Constants;
 import com.flame.model.ShowDetailEvent;
+import com.flame.ui.LadyViewActivity;
 import com.flame.utils.RxBus;
 import com.squareup.picasso.Picasso;
 
@@ -73,10 +75,8 @@ public class LadyPreViewAdapter extends RecyclerView.Adapter<LadyPreViewAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RxBus.getDefault().post(new ShowDetailEvent(mUrl,position));
-//               Intent intent=new Intent(mContext, LadyViewActivity.class);
-//               intent.putExtra("url",mUrl).putExtra("index",position);
-//               mContext.startActivity(intent);
+                LadyViewActivity.jumpToActivity(mContext, Constants.SHOW_DETAIL_ACTION,mUrl,
+                       " ",position);
             }
         });
     }

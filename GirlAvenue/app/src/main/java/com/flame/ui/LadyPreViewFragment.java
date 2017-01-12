@@ -7,18 +7,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-
 import com.flame.presenter.GirlPresenter;
 import com.flame.ui.adapter.LadyPreViewAdapter;
 import com.flame.ui.adapter.SpaceItemDecoration;
-import com.flame.utils.Constants;
-
+import com.flame.Constants;
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/10/7.
- *
- *
  */
 public class LadyPreViewFragment extends BaseFragment {
     LadyPreViewAdapter mAdapter;
@@ -47,7 +43,6 @@ public class LadyPreViewFragment extends BaseFragment {
 
     @Override
     void initView(View view) {
-        ((LadyViewActivity)getActivity()).showToolbar(true);
         mPresenter=new GirlPresenter(this, "");
         RecyclerView recyclerView=(RecyclerView)view.findViewById(R.id.view_list);
         mRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);

@@ -4,7 +4,7 @@
     tools:context="com.flame.ui.MainActivity">
 
     <item
-        android:icon="@drawable/ic_menu_share"
+        android:icon="@drawable/ic_share"
         android:id="@+id/action_share"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
@@ -12,7 +12,7 @@
         />
 
     <item
-        android:icon="@drawable/ic_save_black_24dp"
+        android:icon="@drawable/ic_save"
         app:showAsAction="ifRoom"
         android:id="@+id/action_save"
         android:orderInCategory="100"

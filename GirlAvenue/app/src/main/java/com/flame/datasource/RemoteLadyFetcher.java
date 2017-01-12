@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.flame.database.GirlDAO;
 import com.flame.model.Lady;
-import com.flame.utils.CacheManager;
 
 import java.util.ArrayList;
 import java.util.List;

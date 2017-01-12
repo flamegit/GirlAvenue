@@ -5,7 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.flame.utils.CacheManager;
+import com.flame.datasource.CacheManager;
 import com.squareup.picasso.Picasso;
 import java.util.LinkedList;
 import java.util.List;

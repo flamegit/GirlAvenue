@@ -1,7 +1,10 @@
 package com.flame.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -11,13 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.flame.Constants;
 import com.flame.database.GirlDAO;
 import com.flame.model.Girl;
 import com.flame.model.Lady;
 import com.flame.ui.LadyViewActivity;
 import com.flame.ui.R;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,14 +44,14 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
     }
 
     public void showFooter(){
-        isShowFooter=true;
         notifyItemInserted(getItemCount());
+        isShowFooter=true;
     }
-
     public void hideFooter(){
         isShowFooter=false;
-        notifyItemMoved(getItemCount()-1,getItemCount());
+        notifyItemRemoved(getItemCount());
     }
+    
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
@@ -72,8 +75,10 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
 
     public void clearItems(){
         int count=mResults.size();
-        mResults.clear();
-        notifyItemRangeRemoved(0,count);
+        if(count>0){
+            mResults.clear();
+            notifyItemRangeRemoved(0,count);
+        }
     }
 
     public void addItems( List<T> items){
@@ -115,11 +120,14 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(mContext, LadyViewActivity.class);
-                    intent.putExtra("url",lady.mUrl).putExtra("desc",lady.mDes);
-//                    ActivityOptionsCompat options = ActivityOptionsCompat
-//                            .makeScaleUpAnimation(view, view.getWidth() / 2, view.getHeight() / 2, 0, 0);
-//                    ActivityCompat.startActivity(mContext, intent, options.toBundle());
-                    mContext.startActivity(intent);
+                    intent.putExtra(Constants.URL,lady.mUrl).putExtra(Constants.DEC,lady.mDes);
+                    if(mContext instanceof Activity){
+                        ActivityOptionsCompat options = ActivityOptionsCompat
+                                .makeScaleUpAnimation( holder.itemView,  holder.itemView.getWidth() / 2,  holder.itemView.getHeight() / 2, 0, 0);
+                        ActivityCompat.startActivity((Activity)mContext, intent, options.toBundle());
+                    }else {
+                        mContext.startActivity(intent);
+                    }
                 }
             });
             int resId=lady.isFavorite? R.mipmap.favorite_press:R.mipmap.favorite;
@@ -149,7 +157,6 @@ public class GirlListAdapter<T> extends RecyclerView.Adapter<GirlListAdapter.Vie
         holder.textView.setText(desc);
 
     }
-
      static class ViewHolder extends RecyclerView.ViewHolder{
          public View imageView;
          public TextView textView;
