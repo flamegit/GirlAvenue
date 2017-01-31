@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewStub;
 
 import com.flame.ui.adapter.LadyFragmentAdapter;
 
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initView(Intent intent){
         int type=intent.getIntExtra("type",0);
+
         TabLayout tabLayout=(TabLayout)findViewById(R.id.tab_layout);
         ViewPager viewPager=(ViewPager)findViewById(R.id.fragment_view);
         PagerAdapter adapter=new LadyFragmentAdapter(getSupportFragmentManager(),type);
