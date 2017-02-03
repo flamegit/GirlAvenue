@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.flame.database.GirlDAO;
 import com.flame.model.Lady;
-import com.flame.utils.CacheManager;
+import com.flame.model.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +80,12 @@ public class RemoteLadyFetcher extends Fetcher {
 
     }
 
+    //TODO 获取页面数量。
+    @Override
+    public int getPageNum() {
+        return 30;
+    }
+
     @Override
     public void loadPagerData(final String url, final Callback callback) {
         if(mCaches.loadFromCache(url,callback)){
@@ -126,5 +132,31 @@ public class RemoteLadyFetcher extends Fetcher {
                     }
                 });
         }
+
+    public void loadTags(final String url,final Callback callback){
+         Observable.create(new Observable.OnSubscribe<List<Tag>>() {
+            @Override
+            public void call(Subscriber<? super List<Tag>> subscriber) {
+                List<Tag> tags = HtmlParse.getLadyTags(url);
+                subscriber.onNext(tags);
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Tag>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("fxlts",e.toString());
+                    }
+                    @Override
+                    public void onNext(List<Tag> tags) {
+                        callback.onLoad(tags);
+                    }
+                });
+    }
 }
 

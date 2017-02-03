@@ -1,6 +1,7 @@
 package com.flame.datasource;
 
 import com.flame.model.Lady;
+import com.flame.model.Tag;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,6 +20,7 @@ public class HtmlParse {
 
     public static List<Lady> getLadyCover(String url){
         List<Lady> list=new ArrayList<>();
+
         try {
             Document document=Jsoup.connect(url).get();
             Elements elements=document.select("ul#pins>li>a");
@@ -36,6 +38,40 @@ public class HtmlParse {
         return list;
     }
 
+    public static List<Tag> getLadyTags(String url){
+        int end=url.lastIndexOf("/");
+        int index=Integer.valueOf(url.substring(end+1));
+        List<Tag> list=new ArrayList<>();
+        int tagIndex=0;
+        try {
+            Document document=Jsoup.connect(url.substring(0,end)).get();
+            Element dl=document.select("div.postlist>dl.tags").first();
+            for(Element element:dl.children()){
+                if(element.tagName().equals("dt")){
+                    ++tagIndex;
+                    if(tagIndex>index){
+                        break;
+                    }else {
+                        continue;
+                    }
+                }
+                if(tagIndex==index){
+                    Tag tag=new Tag();
+                    Element a= element.child(0);
+                    tag.name=a.ownText();
+                    tag.url=a.attr("href");
+                    tag.mThumbUrl=a.child(0).attr("src");
+                    tag.num=element.child(1).text();
+                    list.add(tag);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
     public static int getLadyNum(String url){
         int num=0;
         try {
@@ -44,7 +80,7 @@ public class HtmlParse {
             int size=elements.size();
             Element a=elements.get(size-2);
             Element span= a.getElementsByTag("span").first();
-            num=Integer.valueOf(span.html());
+            num=Integer.valueOf(span.text());
         } catch (IOException e) {
             e.printStackTrace();
         }

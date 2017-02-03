@@ -16,10 +16,13 @@ import com.flame.presenter.GirlContract;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by Administrator on 2016/10/8.
  */
 public abstract class BaseFragment extends Fragment implements GirlContract.View {
+
     protected GirlContract.Presenter mPresenter;
     public BaseFragment(){
     }
@@ -45,7 +48,6 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
     public void fillView(List items){}
     abstract void initView(View view);
     abstract int getLayout();
-
     public int getOptionMenu(){
         return R.menu.menu_main;
     }
@@ -63,6 +65,8 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
         }
         return true;
     }
+
+
 
     @Override
     public Context getViewContext() {

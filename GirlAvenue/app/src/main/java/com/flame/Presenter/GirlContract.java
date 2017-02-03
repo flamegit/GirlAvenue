@@ -20,13 +20,12 @@ public interface GirlContract {
     }
     interface Presenter{
         void getGirlList();
-        void start();
         void getNext();
         void getPrevious();
-
         int getPage();
         void getLadyImages(String url);
+        void getLadyTags(String url);
+        int getPageNum();
         void cancel();
-
     }
 }

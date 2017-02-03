@@ -3,6 +3,7 @@ package com.flame.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.flame.datasource.Fetcher;
 import com.flame.datasource.RemoteGirlFetcher;
@@ -62,9 +63,15 @@ public class GirlDAO {
         return false;
     }
 
-    public List<Lady> query(){
+    public List<Lady> query(int page){
+        int offset=page*10;
         List<Lady> list=new ArrayList<>();
-        Cursor c= mContext.getContentResolver().query(GirlData.GirlInfo.CONTENT_URI,GIRL_PROJECTION,null,null,null);
+        Cursor c;
+        if(page==-1){
+             c= mContext.getContentResolver().query(GirlData.GirlInfo.CONTENT_URI,GIRL_PROJECTION,null,null,null);
+        }else {
+             c= mContext.getContentResolver().query(GirlData.GirlInfo.CONTENT_URI,GIRL_PROJECTION,null,null, GirlData.GirlInfo.DEFAULT_SORT_ORDER+" limit 10 offset "+offset);
+        }
         while (c.moveToNext()){
             Lady tmp=new Lady();
             tmp.mDes=c.getString(GIRL_DES_INDEX);
@@ -72,7 +79,23 @@ public class GirlDAO {
             tmp.mUrl=c.getString(GIRL_DETAIL_URL_INDEX);
             list.add(tmp);
         }
+        c.close();
         return list;
+    }
+
+    public List<Lady> query(){
+        return query(-1);
+    }
+
+    public int count(){
+        Cursor c=mContext.getContentResolver().query(GirlData.GirlInfo.CONTENT_URI,new String[]{"COUNT(*) as count"},null,null,null);
+        int count=0;
+        if(c.moveToFirst()){
+            count=c.getInt(0);
+        }
+        Log.d("fxlts","count"+count);
+        c.close();
+        return count;
     }
 
     public boolean query(Lady lady){

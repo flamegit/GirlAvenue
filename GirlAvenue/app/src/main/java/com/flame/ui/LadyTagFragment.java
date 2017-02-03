@@ -7,30 +7,31 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+
+import com.flame.Constants;
 import com.flame.presenter.GirlPresenter;
 import com.flame.ui.adapter.LadyAdapter;
 import com.flame.ui.adapter.SpaceItemDecoration;
-import com.flame.Constants;
+
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/10/7.
  */
-public class LadyPreViewFragment extends BaseFragment {
+public class LadyTagFragment extends BaseFragment {
     LadyAdapter mAdapter;
     SwipeRefreshLayout mRefreshLayout;
-    public LadyPreViewFragment(){}
+    public LadyTagFragment(){}
 
     @Override
     int getLayout() {
         return R.layout.girl_preview;
     }
 
-    public static LadyPreViewFragment Instance(String url,String desc) {
-        LadyPreViewFragment fragment = new LadyPreViewFragment();
+    public static LadyTagFragment Instance(String url) {
+        LadyTagFragment fragment = new LadyTagFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.URL, url);
-        bundle.putString(Constants.DEC, desc);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -38,23 +39,22 @@ public class LadyPreViewFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setTitle(getArguments().getString(Constants.DEC));
     }
 
     @Override
     void initView(View view) {
-        mPresenter=new GirlPresenter(this, "");
+        mPresenter=new GirlPresenter(this, getArguments().getString(Constants.URL));
         RecyclerView recyclerView=(RecyclerView)view.findViewById(R.id.view_list);
         mRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
         GridLayoutManager layoutManager=new GridLayoutManager(getContext(),3);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new SpaceItemDecoration(3));
-        mAdapter=new LadyAdapter<>(getContext(),LadyAdapter.STRING_TYPE);
+        recyclerView.addItemDecoration(new SpaceItemDecoration(7));
+        mAdapter=new LadyAdapter<>(getContext(),LadyAdapter.TAG_TYPE);
         recyclerView.setAdapter(mAdapter);
         mRefreshLayout.setProgressViewOffset(true, 0, 50);
         mRefreshLayout.setDistanceToTriggerSync(1000);
-        mPresenter.getLadyImages(getArguments().getString(Constants.URL));
+        mPresenter.getLadyTags(getArguments().getString(Constants.URL));
     }
     @Override
     public void showProgress() {

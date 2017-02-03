@@ -5,7 +5,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.flame.utils.CacheManager;
+import com.flame.datasource.CacheManager;
+import com.flame.ui.LadyViewActivity;
 import com.squareup.picasso.Picasso;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,8 +27,8 @@ public class LadyPagerAdapter extends android.support.v4.view.PagerAdapter {
 
 
 
-    public LadyPagerAdapter(String url){
-        mResults= CacheManager.getInstance().getLady(url).mList;
+    public LadyPagerAdapter(){
+        mResults= CacheManager.getInstance().getLady(LadyViewActivity.sUrl).mList;
     }
 
     public void setTapListener(PhotoViewAttacher.OnViewTapListener listener){

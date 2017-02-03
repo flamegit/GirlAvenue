@@ -1,10 +1,7 @@
 package com.flame.ui;
 
 import android.database.ContentObserver;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -13,11 +10,10 @@ import android.widget.TextView;
 
 import com.flame.database.GirlData;
 import com.flame.datasource.LocalGirlFetcher;
-import com.flame.datasource.RemoteLadyFetcher;
 import com.flame.model.Lady;
 import com.flame.presenter.GirlPresenter;
-import com.flame.ui.adapter.GirlListAdapter;
-import com.flame.utils.Constants;
+import com.flame.Constants;
+import com.flame.ui.adapter.LadyAdapter;
 
 import java.util.List;
 
@@ -28,14 +24,15 @@ import java.util.List;
  */
 public class GirlListFragment extends BaseFragment implements View.OnClickListener{
 
-    GirlListAdapter mAdapter;
+    LadyAdapter mAdapter;
     RecyclerView mRecyclerView;
     TextView mPreviousView;
     public  GirlListFragment(){
     }
-    public static GirlListFragment Instance(String baseUrl){
+    public static GirlListFragment Instance(String baseUrl,int type){
         Bundle bundle=new Bundle();
         bundle.putString(Constants.URL,baseUrl);
+        bundle.putInt(Constants.TYPE,type);
         GirlListFragment fragment=new GirlListFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -51,7 +48,7 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     void initView(View view) {
-        if(getActivity().getIntent().getAction().equals("favorite")){
+        if(getArguments().getInt(Constants.TYPE)==Constants.FAVORITE){
             mPresenter=new GirlPresenter(this, new LocalGirlFetcher(getContext()));
             getContext().getContentResolver().registerContentObserver(GirlData.GirlInfo.CONTENT_URI,
                 false,new ContentObserver(null){
@@ -77,7 +74,7 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(!recyclerView.canScrollVertically(1)){
+                if(!recyclerView.canScrollVertically(1) && mPresenter.getPageNum()>10){
                     bottomView.setVisibility(View.VISIBLE);
                 }else if(Math.abs(dy)>10){
                     bottomView.setVisibility(View.GONE);
@@ -85,21 +82,23 @@ public class GirlListFragment extends BaseFragment implements View.OnClickListen
             }
         });
         mRecyclerView.setHasFixedSize(true);
-        mAdapter=new GirlListAdapter<Lady>(getContext(),mPresenter.getPage());
+        mAdapter=new LadyAdapter<Lady>(getActivity(),LadyAdapter.LADY_TYPE);
         mRecyclerView.setAdapter(mAdapter);
         mPresenter.getGirlList();
         Log.d("ListFragment","onCreateView");
     }
 
+
+
     @Override
     public void showProgress() {
         mAdapter.clearItems();
-        mAdapter.showFooter();
+        mAdapter.showProgress();
     }
     @Override
     public void hideProgress() {
         mRecyclerView.scrollToPosition(0);
-        mAdapter.hideFooter();
+        mAdapter.hideProgress();
     }
 
     @Override

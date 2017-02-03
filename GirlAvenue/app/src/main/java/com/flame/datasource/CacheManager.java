@@ -1,6 +1,5 @@
-package com.flame.utils;
+package com.flame.datasource;
 
-import com.flame.datasource.Fetcher;
 import com.flame.model.Lady;
 
 import java.util.ArrayList;

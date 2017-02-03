@@ -1,15 +1,16 @@
 package com.flame.presenter;
 
-import android.database.ContentObserver;
+import android.util.Log;
+import android.widget.Toast;
 
-import com.flame.database.GirlData;
 import com.flame.datasource.Fetcher;
 import com.flame.datasource.RemoteLadyFetcher;
+import com.flame.utils.NetWorkUtils;
 
 import java.util.List;
 
-import static com.flame.utils.Constants.ENDURL;
-import static com.flame.utils.Constants.PATH;
+import static com.flame.Constants.ENDURL;
+import static com.flame.Constants.PATH;
 
 /**
  * Created by Administrator on 2016/10/9.
@@ -37,9 +38,14 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
 
     @Override
     public void onLoad(List results) {
-        mView.fillView(results);
+        if(results!=null&& results.size()>0){
+            mView.fillView(results);
+            isLoading=false;
+        }else {
+            Toast.makeText(mView.getViewContext(), "No Content", Toast.LENGTH_SHORT).show();
+        }
         mView.hideProgress();
-        isLoading=false;
+
     }
 
     public int getPage(){
@@ -56,8 +62,9 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
     @Override
     public void onLoad(String item)
     {
-        mView.fillView(item);
         mView.hideProgress();
+        mView.fillView(item);
+        isLoading=false;
     }
 
     @Override
@@ -66,9 +73,20 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         isLoading=false;
     }
 
+    private boolean checkNetWork(){
+        if(!NetWorkUtils.isNetworkConnected(mView.getViewContext())){
+            Toast.makeText(mView.getViewContext(), "NetWork not available", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void getGirlList() {
         if(isLoading){
+            return;
+        }
+        if(!checkNetWork()){
             return;
         }
         mView.showProgress();
@@ -77,9 +95,23 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
     }
     @Override
     public void getLadyImages(String url) {
+        if(!checkNetWork()){
+            return;
+        }
         mView.showProgress();
         mFetcher.loadPagerData(url,this);
     }
+
+    @Override
+    public void getLadyTags(String url) {
+        Log.d("fxlts","loadtag");
+        if(!checkNetWork()){
+            return;
+        }
+        mView.showProgress();
+        mFetcher.loadTags(url,this);
+    }
+
     @Override
     public void getNext(){
         mPage++;
@@ -90,12 +122,15 @@ public class GirlPresenter implements GirlContract.Presenter,Fetcher.Callback {
         mPage--;
         getGirlList();
     }
+
+    @Override
+    public int getPageNum() {
+        return mFetcher.getPageNum();
+    }
+
     @Override
     public void cancel() {
         mFetcher.cancel();
     }
-    @Override
-    public void start() {
-        getGirlList();
-    }
+
 }

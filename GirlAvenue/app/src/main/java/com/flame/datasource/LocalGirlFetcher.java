@@ -30,11 +30,16 @@ public class LocalGirlFetcher extends Fetcher {
     }
 
     @Override
-    public void loadData( String url, final Callback callback) {
+    public void loadData(final String url, final Callback callback) {
         mCover= Observable.create(new Observable.OnSubscribe<List<Lady>>() {
             @Override
             public void call(Subscriber<? super List<Lady>> subscriber) {
-                List<Lady> ladys = GirlDAO.getInstance(mContext).query();
+//                 int page=0;
+//                int end=url.lastIndexOf("/");
+//                if(end!=-1){
+//                    page=Integer.valueOf(url.substring(end+1));
+//               }
+                List<Lady> ladys = GirlDAO.getInstance(mContext).query(0);
                 subscriber.onNext(ladys);
                 subscriber.onCompleted();
             }
@@ -65,4 +70,8 @@ public class LocalGirlFetcher extends Fetcher {
 
     }
 
+    @Override
+    public int getPageNum() {
+        return GirlDAO.getInstance(mContext).count();
+    }
 }

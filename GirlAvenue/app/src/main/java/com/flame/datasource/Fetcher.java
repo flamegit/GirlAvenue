@@ -25,6 +25,14 @@ public  class Fetcher {
     public  void  loadPagerData(String url,Callback callback){
     }
 
+    public void loadTags(String url,Callback callback){
+
+    }
+
+    public int  getPageNum(){
+        return 10;
+    }
+
     public void cancel(){
 
     }

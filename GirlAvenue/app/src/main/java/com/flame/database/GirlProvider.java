@@ -293,7 +293,6 @@ public class GirlProvider extends ContentProvider {
 
             // Recreates the database with a new version
             onCreate(db);
-
         }
     }
 
