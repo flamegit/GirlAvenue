@@ -19,14 +19,6 @@ import java.util.List;
  * Created by Administrator on 2016/10/7.
  */
 public class LadyTagFragment extends BaseFragment {
-    LadyAdapter mAdapter;
-    SwipeRefreshLayout mRefreshLayout;
-    public LadyTagFragment(){}
-
-    @Override
-    int getLayout() {
-        return R.layout.girl_preview;
-    }
 
     public static LadyTagFragment Instance(String url) {
         LadyTagFragment fragment = new LadyTagFragment();
@@ -37,49 +29,21 @@ public class LadyTagFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    int getLayout() {
+        return R.layout.girl_preview;
     }
 
     @Override
-    void initView(View view) {
+    protected void initView(View view) {
+        super.initView(view);
         mPresenter=new GirlPresenter(this, getArguments().getString(Constants.URL));
         RecyclerView recyclerView=(RecyclerView)view.findViewById(R.id.view_list);
-        mRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
         GridLayoutManager layoutManager=new GridLayoutManager(getContext(),3);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new SpaceItemDecoration(7));
+        recyclerView.addItemDecoration(new SpaceItemDecoration(6));
         mAdapter=new LadyAdapter<>(getContext(),LadyAdapter.TAG_TYPE);
         recyclerView.setAdapter(mAdapter);
-        mRefreshLayout.setProgressViewOffset(true, 0, 50);
-        mRefreshLayout.setDistanceToTriggerSync(1000);
         mPresenter.getLadyTags(getArguments().getString(Constants.URL));
-    }
-    @Override
-    public void showProgress() {
-        mRefreshLayout.setRefreshing(true);
-    }
-    @Override
-    public void hideProgress() {
-        mRefreshLayout.setRefreshing(false);
-        mRefreshLayout.setEnabled(false);
-    }
-
-    @Override
-    public void fillView(List results) {
-        mAdapter.addItems(results);
-    }
-
-    @Override
-    public void fillView(String item) {
-        mAdapter.addItem(item);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onStop();
-        mPresenter.cancel();
-        Log.d("fxlts","ladypreviewfragment destory");
     }
 }

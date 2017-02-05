@@ -40,7 +40,7 @@ public class LadyFragmentAdapter extends FragmentPagerAdapter {
             fragment= LadyTagFragment.Instance(ENDURL + paths[type][position]);
             Log.d("fxlts","Tag");
         }else {
-            fragment= GirlListFragment.Instance(ENDURL + paths[type][position],type);
+            fragment= GirlListFragment.Instance(ENDURL + paths[type][position]);
 
         }
         return fragment;

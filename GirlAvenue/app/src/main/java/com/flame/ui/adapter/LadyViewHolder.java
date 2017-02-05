@@ -39,22 +39,6 @@ public class LadyViewHolder extends BaseViewHolder<Lady> {
         final Context context=imageView.getContext();
         int resId = lady.isFavorite ? R.mipmap.favorite_press : R.mipmap.favorite;
         favoriteView.setImageResource(resId);
-        favoriteView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (lady.isFavorite) {
-                    if (!GirlDAO.getInstance(context).delete(lady)) {
-                        return;
-                    }
-                    lady.isFavorite = false;
-                    favoriteView.setImageResource(R.mipmap.favorite);
-                } else {
-                    GirlDAO.getInstance(context).insert(lady);
-                    lady.isFavorite = true;
-                    favoriteView.setImageResource(R.mipmap.favorite_press);
-                }
-            }
-        });
         Picasso picasso = Picasso.with(context);
         picasso.setLoggingEnabled(true);
         picasso.load(lady.mThumbUrl)

@@ -7,17 +7,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.flame.Constants;
+import com.flame.database.GirlDAO;
 import com.flame.model.Lady;
 import com.flame.ui.LadyViewActivity;
 import com.flame.ui.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,29 +28,19 @@ import java.util.List;
 public class LadyAdapter<T> extends RecyclerView.Adapter<BaseViewHolder<T>> {
 
     private int mType;
-
-    public final static int PROGRESS=0;
     public final static int LADY_TYPE=1;
     public final static int STRING_TYPE=2;
     public final static int TAG_TYPE=3;
     private List<T> mResults;
     private Context mContext;
+    boolean isDelete;
     private View.OnClickListener mListener;
-
-    boolean isShowProgress;
     public LadyAdapter(Context context,int type){
         mType=type;
         mContext=context;
-        mResults=new ArrayList<>(10);
-    }
+        isDelete=false;
+        mResults=new ArrayList<>();
 
-    public void showProgress(){
-        notifyItemInserted(0);
-        isShowProgress=true;
-    }
-    public void hideProgress(){
-        isShowProgress=false;
-        notifyItemRemoved(0);
     }
 
     public void clearItems(){
@@ -61,13 +51,14 @@ public class LadyAdapter<T> extends RecyclerView.Adapter<BaseViewHolder<T>> {
         }
     }
 
-    public void setListener(View.OnClickListener listener){
-        mListener=listener;
+    public void setDeleteItem(boolean isDelete){
+        this.isDelete=isDelete;
     }
 
     @Override
     public int getItemCount() {
-        return isShowProgress ? 1:mResults.size();
+       // return isShowProgress ? 1:mResults.size();
+        return mResults.size();
     }
     public void addItem( T items){
         mResults.add(items);
@@ -81,15 +72,13 @@ public class LadyAdapter<T> extends RecyclerView.Adapter<BaseViewHolder<T>> {
         notifyItemRangeInserted(0,items.size());
     }
 
+    private void deleteItem(int position){
+        mResults.remove(position);
+        notifyItemRemoved(position);
+    }
+
     @Override
     public void onBindViewHolder(final BaseViewHolder holder, final int position) {
-        if(getItemViewType(position)==PROGRESS){
-            RecyclerView.LayoutParams layoutParams= (RecyclerView.LayoutParams)holder.itemView.getLayoutParams();
-            if(layoutParams instanceof StaggeredGridLayoutManager.LayoutParams){
-                ((StaggeredGridLayoutManager.LayoutParams)layoutParams).setFullSpan(true);
-            }
-            return;
-        }
 
         holder.bindViewHolder(mResults.get(position),position);
         if(mType==LADY_TYPE){
@@ -110,28 +99,34 @@ public class LadyAdapter<T> extends RecyclerView.Adapter<BaseViewHolder<T>> {
                     }
                 }
             });
+            final ImageView favoriteView=((LadyViewHolder)holder).favoriteView;
+            ((LadyViewHolder)holder).favoriteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (lady.isFavorite) {
+                        if (!GirlDAO.getInstance(mContext).delete(lady)) {
+                            return;
+                        }
+                        lady.isFavorite = false;
+                        favoriteView.setImageResource(R.mipmap.favorite);
+                        if(isDelete){
+                            deleteItem(position);
+                        }
+                    } else {
+                        GirlDAO.getInstance(mContext).insert(lady);
+                        lady.isFavorite = true;
+                        favoriteView.setImageResource(R.mipmap.favorite_press);
+                    }
+                }
+            });
         }
-    }
-
-
-    @Override
-    public int getItemViewType(int position) {
-       if(isShowProgress && position==0){
-           return PROGRESS;
-       }else {
-           return mType;
-       }
     }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if(viewType==PROGRESS){
-            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_view,parent,false);
-            return new ProgressViewHolder(view);
-        }
         if(mType==LADY_TYPE){
-            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.image_view,parent,false);
+            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.image_item,parent,false);
             return new LadyViewHolder(view);
         }
         if(mType==STRING_TYPE){
@@ -148,7 +143,6 @@ public class LadyAdapter<T> extends RecyclerView.Adapter<BaseViewHolder<T>> {
             GridLayoutManager.LayoutParams params=new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,h);
             view.setLayoutParams(params);
             return new TagViewHolder(view);
-
         }
         return null;
     }

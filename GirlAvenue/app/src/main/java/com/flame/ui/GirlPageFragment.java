@@ -58,11 +58,6 @@ public class GirlPageFragment extends BaseFragment {
         fragment.setArguments(bundle);
         return fragment;
     }
-    @Override
-    public void showProgress() {}
-
-    @Override
-    public void hideProgress() {}
 
     @Override
     public void onResume() {
@@ -186,18 +181,13 @@ public class GirlPageFragment extends BaseFragment {
     }
 
     @Override
-    public void fillView(String item) {
-        mAdapter.addItem(item);
-    }
-
-    @Override
     int getLayout() {
         return R.layout.girl_pager;
     }
 
     @Override
-    void initView(View view) {
-
+    protected void initView(View view) {
+        super.initView(view);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mAdapter = new LadyPagerAdapter();
         mCacheManager.setCallback(new Fetcher.Callback(){
@@ -256,6 +246,5 @@ public class GirlPageFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         mCacheManager.setCallback(null);
-
     }
 }

@@ -35,12 +35,12 @@ public class LadyViewActivity extends AppCompatActivity {
                 mToolbar.setBackgroundColor(Color.BLACK);
                 fragment = GirlPageFragment.Instance(url,index);
             }else if(Constants.SHOW_FAVORITE_ACTION.equals(intent.getAction())){
-                fragment=GirlListFragment.Instance(null,Constants.FAVORITE);
+                fragment=new FavoriteFragment();
             }else if(Constants.SHOW_TAG_ACTION.equals(intent.getAction())){
-                fragment=GirlListFragment.Instance(url,Constants.TAG);
+                fragment=GirlListFragment.Instance(url);
             }
             else {
-                fragment = LadyPreViewFragment.Instance(url, desc);
+                fragment = new LadyPreViewFragment();
             }
             getSupportFragmentManager().beginTransaction().add(R.id.content, fragment).commit();
         }

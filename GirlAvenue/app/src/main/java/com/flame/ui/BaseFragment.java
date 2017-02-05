@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flame.presenter.GirlContract;
+import com.flame.ui.adapter.LadyAdapter;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ import javax.inject.Inject;
 public abstract class BaseFragment extends Fragment implements GirlContract.View {
 
     protected GirlContract.Presenter mPresenter;
+    protected View mProgressBar;
+    protected LadyAdapter mAdapter;
     public BaseFragment(){
     }
 
@@ -42,11 +45,9 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
         initView(view);
         return view;
     }
-    @Override
-    public void fillView(String item){}
-    @Override
-    public void fillView(List items){}
-    abstract void initView(View view);
+    protected void initView(View view){
+        mProgressBar=view.findViewById(R.id.progress_bar);
+    }
     abstract int getLayout();
     public int getOptionMenu(){
         return R.menu.menu_main;
@@ -66,10 +67,35 @@ public abstract class BaseFragment extends Fragment implements GirlContract.View
         return true;
     }
 
+    @Override
+    public void showProgress() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+    @Override
+    public void hideProgress() {
+        mProgressBar.setVisibility(View.GONE);
+    }
 
+    @Override
+    public void fillView(List results) {
+        mAdapter.addItems(results);
+    }
+
+    @Override
+    public void fillView(String item) {
+        mAdapter.addItem(item);
+    }
 
     @Override
     public Context getViewContext() {
         return getContext();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onStop();
+        if(mPresenter!=null){
+            mPresenter.cancel();
+        }
     }
 }
